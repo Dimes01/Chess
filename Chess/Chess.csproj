@@ -1,0 +1,694 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2238C2EE-C0D0-4C58-BA65-F5DF0B028315}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Chess</RootNamespace>
+    <AssemblyName>Chess</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Controls\Cell.xaml.cs">
+      <DependentUpon>Cell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Desk.xaml.cs">
+      <DependentUpon>Desk.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Figure.xaml.cs">
+      <DependentUpon>Figure.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AllMoves.cs" />
+    <Compile Include="Models\Desk.cs" />
+    <Compile Include="Utilities\RelayCommand.cs" />
+    <Page Include="Controls\Cell.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Desk.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Figure.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Figure.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Images\.editorconfig" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\adventurer\bB.png" />
+    <Resource Include="Images\adventurer\bK.png" />
+    <Resource Include="Images\adventurer\bN.png" />
+    <Resource Include="Images\adventurer\bP.png" />
+    <Resource Include="Images\adventurer\bQ.png" />
+    <Resource Include="Images\adventurer\bR.png" />
+    <Resource Include="Images\adventurer\wB.png" />
+    <Resource Include="Images\adventurer\wK.png" />
+    <Resource Include="Images\adventurer\wN.png" />
+    <Resource Include="Images\adventurer\wP.png" />
+    <Resource Include="Images\adventurer\wQ.png" />
+    <Resource Include="Images\adventurer\wR.png" />
+    <Resource Include="Images\alpha\bB.png" />
+    <Resource Include="Images\alpha\bK.png" />
+    <Resource Include="Images\alpha\bN.png" />
+    <Resource Include="Images\alpha\bP.png" />
+    <Resource Include="Images\alpha\bQ.png" />
+    <Resource Include="Images\alpha\bR.png" />
+    <Resource Include="Images\alpha\wB.png" />
+    <Resource Include="Images\alpha\wK.png" />
+    <Resource Include="Images\alpha\wN.png" />
+    <Resource Include="Images\alpha\wP.png" />
+    <Resource Include="Images\alpha\wQ.png" />
+    <Resource Include="Images\alpha\wR.png" />
+    <Resource Include="Images\berlin\bB.png" />
+    <Resource Include="Images\berlin\bK.png" />
+    <Resource Include="Images\berlin\bN.png" />
+    <Resource Include="Images\berlin\bP.png" />
+    <Resource Include="Images\berlin\bQ.png" />
+    <Resource Include="Images\berlin\bR.png" />
+    <Resource Include="Images\berlin\wB.png" />
+    <Resource Include="Images\berlin\wK.png" />
+    <Resource Include="Images\berlin\wN.png" />
+    <Resource Include="Images\berlin\wP.png" />
+    <Resource Include="Images\berlin\wQ.png" />
+    <Resource Include="Images\berlin\wR.png" />
+    <Resource Include="Images\cardinal\bB.png" />
+    <Resource Include="Images\cardinal\bK.png" />
+    <Resource Include="Images\cardinal\bN.png" />
+    <Resource Include="Images\cardinal\bP.png" />
+    <Resource Include="Images\cardinal\bQ.png" />
+    <Resource Include="Images\cardinal\bR.png" />
+    <Resource Include="Images\cardinal\wB.png" />
+    <Resource Include="Images\cardinal\wK.png" />
+    <Resource Include="Images\cardinal\wN.png" />
+    <Resource Include="Images\cardinal\wP.png" />
+    <Resource Include="Images\cardinal\wQ.png" />
+    <Resource Include="Images\cardinal\wR.png" />
+    <Resource Include="Images\cases\bB.png" />
+    <Resource Include="Images\cases\bK.png" />
+    <Resource Include="Images\cases\bN.png" />
+    <Resource Include="Images\cases\bP.png" />
+    <Resource Include="Images\cases\bQ.png" />
+    <Resource Include="Images\cases\bR.png" />
+    <Resource Include="Images\cases\wB.png" />
+    <Resource Include="Images\cases\wK.png" />
+    <Resource Include="Images\cases\wN.png" />
+    <Resource Include="Images\cases\wP.png" />
+    <Resource Include="Images\cases\wQ.png" />
+    <Resource Include="Images\cases\wR.png" />
+    <Resource Include="Images\cheq\bB.png" />
+    <Resource Include="Images\cheq\bK.png" />
+    <Resource Include="Images\cheq\bN.png" />
+    <Resource Include="Images\cheq\bP.png" />
+    <Resource Include="Images\cheq\bQ.png" />
+    <Resource Include="Images\cheq\bR.png" />
+    <Resource Include="Images\cheq\wB.png" />
+    <Resource Include="Images\cheq\wK.png" />
+    <Resource Include="Images\cheq\wN.png" />
+    <Resource Include="Images\cheq\wP.png" />
+    <Resource Include="Images\cheq\wQ.png" />
+    <Resource Include="Images\cheq\wR.png" />
+    <Resource Include="Images\chess24\bB.png" />
+    <Resource Include="Images\chess24\bK.png" />
+    <Resource Include="Images\chess24\bN.png" />
+    <Resource Include="Images\chess24\bP.png" />
+    <Resource Include="Images\chess24\bQ.png" />
+    <Resource Include="Images\chess24\bR.png" />
+    <Resource Include="Images\chess24\wB.png" />
+    <Resource Include="Images\chess24\wK.png" />
+    <Resource Include="Images\chess24\wN.png" />
+    <Resource Include="Images\chess24\wP.png" />
+    <Resource Include="Images\chess24\wQ.png" />
+    <Resource Include="Images\chess24\wR.png" />
+    <Resource Include="Images\chess7\bB.png" />
+    <Resource Include="Images\chess7\bK.png" />
+    <Resource Include="Images\chess7\bN.png" />
+    <Resource Include="Images\chess7\bP.png" />
+    <Resource Include="Images\chess7\bQ.png" />
+    <Resource Include="Images\chess7\bR.png" />
+    <Resource Include="Images\chess7\wB.png" />
+    <Resource Include="Images\chess7\wK.png" />
+    <Resource Include="Images\chess7\wN.png" />
+    <Resource Include="Images\chess7\wP.png" />
+    <Resource Include="Images\chess7\wQ.png" />
+    <Resource Include="Images\chess7\wR.png" />
+    <Resource Include="Images\chesscom\bB.png" />
+    <Resource Include="Images\chesscom\bK.png" />
+    <Resource Include="Images\chesscom\bN.png" />
+    <Resource Include="Images\chesscom\bP.png" />
+    <Resource Include="Images\chesscom\bQ.png" />
+    <Resource Include="Images\chesscom\bR.png" />
+    <Resource Include="Images\chesscom\wB.png" />
+    <Resource Include="Images\chesscom\wK.png" />
+    <Resource Include="Images\chesscom\wN.png" />
+    <Resource Include="Images\chesscom\wP.png" />
+    <Resource Include="Images\chesscom\wQ.png" />
+    <Resource Include="Images\chesscom\wR.png" />
+    <Resource Include="Images\chessnut\bB.png" />
+    <Resource Include="Images\chessnut\bK.png" />
+    <Resource Include="Images\chessnut\bN.png" />
+    <Resource Include="Images\chessnut\bP.png" />
+    <Resource Include="Images\chessnut\bQ.png" />
+    <Resource Include="Images\chessnut\bR.png" />
+    <Resource Include="Images\chessnut\wB.png" />
+    <Resource Include="Images\chessnut\wK.png" />
+    <Resource Include="Images\chessnut\wN.png" />
+    <Resource Include="Images\chessnut\wP.png" />
+    <Resource Include="Images\chessnut\wQ.png" />
+    <Resource Include="Images\chessnut\wR.png" />
+    <Resource Include="Images\chess_samara\bB.png" />
+    <Resource Include="Images\chess_samara\bK.png" />
+    <Resource Include="Images\chess_samara\bN.png" />
+    <Resource Include="Images\chess_samara\bP.png" />
+    <Resource Include="Images\chess_samara\bQ.png" />
+    <Resource Include="Images\chess_samara\bR.png" />
+    <Resource Include="Images\chess_samara\wB.png" />
+    <Resource Include="Images\chess_samara\wK.png" />
+    <Resource Include="Images\chess_samara\wN.png" />
+    <Resource Include="Images\chess_samara\wP.png" />
+    <Resource Include="Images\chess_samara\wQ.png" />
+    <Resource Include="Images\chess_samara\wR.png" />
+    <Resource Include="Images\companion\bB.png" />
+    <Resource Include="Images\companion\bK.png" />
+    <Resource Include="Images\companion\bN.png" />
+    <Resource Include="Images\companion\bP.png" />
+    <Resource Include="Images\companion\bQ.png" />
+    <Resource Include="Images\companion\bR.png" />
+    <Resource Include="Images\companion\wB.png" />
+    <Resource Include="Images\companion\wK.png" />
+    <Resource Include="Images\companion\wN.png" />
+    <Resource Include="Images\companion\wP.png" />
+    <Resource Include="Images\companion\wQ.png" />
+    <Resource Include="Images\companion\wR.png" />
+    <Resource Include="Images\condal\bB.png" />
+    <Resource Include="Images\condal\bK.png" />
+    <Resource Include="Images\condal\bN.png" />
+    <Resource Include="Images\condal\bP.png" />
+    <Resource Include="Images\condal\bQ.png" />
+    <Resource Include="Images\condal\bR.png" />
+    <Resource Include="Images\condal\wB.png" />
+    <Resource Include="Images\condal\wK.png" />
+    <Resource Include="Images\condal\wN.png" />
+    <Resource Include="Images\condal\wP.png" />
+    <Resource Include="Images\condal\wQ.png" />
+    <Resource Include="Images\condal\wR.png" />
+    <Resource Include="Images\dash\bB.png" />
+    <Resource Include="Images\dash\bK.png" />
+    <Resource Include="Images\dash\bN.png" />
+    <Resource Include="Images\dash\bP.png" />
+    <Resource Include="Images\dash\bQ.png" />
+    <Resource Include="Images\dash\bR.png" />
+    <Resource Include="Images\dash\wB.png" />
+    <Resource Include="Images\dash\wK.png" />
+    <Resource Include="Images\dash\wN.png" />
+    <Resource Include="Images\dash\wP.png" />
+    <Resource Include="Images\dash\wQ.png" />
+    <Resource Include="Images\dash\wR.png" />
+    <Resource Include="Images\dilena\bB.png" />
+    <Resource Include="Images\dilena\bK.png" />
+    <Resource Include="Images\dilena\bN.png" />
+    <Resource Include="Images\dilena\bP.png" />
+    <Resource Include="Images\dilena\bQ.png" />
+    <Resource Include="Images\dilena\bR.png" />
+    <Resource Include="Images\dilena\wB.png" />
+    <Resource Include="Images\dilena\wK.png" />
+    <Resource Include="Images\dilena\wN.png" />
+    <Resource Include="Images\dilena\wP.png" />
+    <Resource Include="Images\dilena\wQ.png" />
+    <Resource Include="Images\dilena\wR.png" />
+    <Resource Include="Images\dubrovny\bB.png" />
+    <Resource Include="Images\dubrovny\bK.png" />
+    <Resource Include="Images\dubrovny\bN.png" />
+    <Resource Include="Images\dubrovny\bP.png" />
+    <Resource Include="Images\dubrovny\bQ.png" />
+    <Resource Include="Images\dubrovny\bR.png" />
+    <Resource Include="Images\dubrovny\wB.png" />
+    <Resource Include="Images\dubrovny\wK.png" />
+    <Resource Include="Images\dubrovny\wN.png" />
+    <Resource Include="Images\dubrovny\wP.png" />
+    <Resource Include="Images\dubrovny\wQ.png" />
+    <Resource Include="Images\dubrovny\wR.png" />
+    <Resource Include="Images\fantasy\bB.png" />
+    <Resource Include="Images\fantasy\bK.png" />
+    <Resource Include="Images\fantasy\bN.png" />
+    <Resource Include="Images\fantasy\bP.png" />
+    <Resource Include="Images\fantasy\bQ.png" />
+    <Resource Include="Images\fantasy\bR.png" />
+    <Resource Include="Images\fantasy\wB.png" />
+    <Resource Include="Images\fantasy\wK.png" />
+    <Resource Include="Images\fantasy\wN.png" />
+    <Resource Include="Images\fantasy\wP.png" />
+    <Resource Include="Images\fantasy\wQ.png" />
+    <Resource Include="Images\fantasy\wR.png" />
+    <Resource Include="Images\fresca\bB.png" />
+    <Resource Include="Images\fresca\bK.png" />
+    <Resource Include="Images\fresca\bN.png" />
+    <Resource Include="Images\fresca\bP.png" />
+    <Resource Include="Images\fresca\bQ.png" />
+    <Resource Include="Images\fresca\bR.png" />
+    <Resource Include="Images\fresca\wB.png" />
+    <Resource Include="Images\fresca\wK.png" />
+    <Resource Include="Images\fresca\wN.png" />
+    <Resource Include="Images\fresca\wP.png" />
+    <Resource Include="Images\fresca\wQ.png" />
+    <Resource Include="Images\fresca\wR.png" />
+    <Resource Include="Images\glass\bB.png" />
+    <Resource Include="Images\glass\bK.png" />
+    <Resource Include="Images\glass\bN.png" />
+    <Resource Include="Images\glass\bP.png" />
+    <Resource Include="Images\glass\bQ.png" />
+    <Resource Include="Images\glass\bR.png" />
+    <Resource Include="Images\glass\wB.png" />
+    <Resource Include="Images\glass\wK.png" />
+    <Resource Include="Images\glass\wN.png" />
+    <Resource Include="Images\glass\wP.png" />
+    <Resource Include="Images\glass\wQ.png" />
+    <Resource Include="Images\glass\wR.png" />
+    <Resource Include="Images\graffiti\bB.png" />
+    <Resource Include="Images\graffiti\bK.png" />
+    <Resource Include="Images\graffiti\bN.png" />
+    <Resource Include="Images\graffiti\bP.png" />
+    <Resource Include="Images\graffiti\bQ.png" />
+    <Resource Include="Images\graffiti\bR.png" />
+    <Resource Include="Images\graffiti\wB.png" />
+    <Resource Include="Images\graffiti\wK.png" />
+    <Resource Include="Images\graffiti\wN.png" />
+    <Resource Include="Images\graffiti\wP.png" />
+    <Resource Include="Images\graffiti\wQ.png" />
+    <Resource Include="Images\graffiti\wR.png" />
+    <Resource Include="Images\graffiti_light\bB.png" />
+    <Resource Include="Images\graffiti_light\bK.png" />
+    <Resource Include="Images\graffiti_light\bN.png" />
+    <Resource Include="Images\graffiti_light\bP.png" />
+    <Resource Include="Images\graffiti_light\bQ.png" />
+    <Resource Include="Images\graffiti_light\bR.png" />
+    <Resource Include="Images\graffiti_light\wB.png" />
+    <Resource Include="Images\graffiti_light\wK.png" />
+    <Resource Include="Images\graffiti_light\wN.png" />
+    <Resource Include="Images\graffiti_light\wP.png" />
+    <Resource Include="Images\graffiti_light\wQ.png" />
+    <Resource Include="Images\graffiti_light\wR.png" />
+    <Resource Include="Images\kingdom\bB.png" />
+    <Resource Include="Images\kingdom\bK.png" />
+    <Resource Include="Images\kingdom\bN.png" />
+    <Resource Include="Images\kingdom\bP.png" />
+    <Resource Include="Images\kingdom\bQ.png" />
+    <Resource Include="Images\kingdom\bR.png" />
+    <Resource Include="Images\kingdom\wB.png" />
+    <Resource Include="Images\kingdom\wK.png" />
+    <Resource Include="Images\kingdom\wN.png" />
+    <Resource Include="Images\kingdom\wP.png" />
+    <Resource Include="Images\kingdom\wQ.png" />
+    <Resource Include="Images\kingdom\wR.png" />
+    <Resource Include="Images\kosal\bB.png" />
+    <Resource Include="Images\kosal\bK.png" />
+    <Resource Include="Images\kosal\bN.png" />
+    <Resource Include="Images\kosal\bP.png" />
+    <Resource Include="Images\kosal\bQ.png" />
+    <Resource Include="Images\kosal\bR.png" />
+    <Resource Include="Images\kosal\wB.png" />
+    <Resource Include="Images\kosal\wK.png" />
+    <Resource Include="Images\kosal\wN.png" />
+    <Resource Include="Images\kosal\wP.png" />
+    <Resource Include="Images\kosal\wQ.png" />
+    <Resource Include="Images\kosal\wR.png" />
+    <Resource Include="Images\leipzig\bB.png" />
+    <Resource Include="Images\leipzig\bK.png" />
+    <Resource Include="Images\leipzig\bN.png" />
+    <Resource Include="Images\leipzig\bP.png" />
+    <Resource Include="Images\leipzig\bQ.png" />
+    <Resource Include="Images\leipzig\bR.png" />
+    <Resource Include="Images\leipzig\wB.png" />
+    <Resource Include="Images\leipzig\wK.png" />
+    <Resource Include="Images\leipzig\wN.png" />
+    <Resource Include="Images\leipzig\wP.png" />
+    <Resource Include="Images\leipzig\wQ.png" />
+    <Resource Include="Images\leipzig\wR.png" />
+    <Resource Include="Images\letter\bB.png" />
+    <Resource Include="Images\letter\bK.png" />
+    <Resource Include="Images\letter\bN.png" />
+    <Resource Include="Images\letter\bP.png" />
+    <Resource Include="Images\letter\bQ.png" />
+    <Resource Include="Images\letter\bR.png" />
+    <Resource Include="Images\letter\wB.png" />
+    <Resource Include="Images\letter\wK.png" />
+    <Resource Include="Images\letter\wN.png" />
+    <Resource Include="Images\letter\wP.png" />
+    <Resource Include="Images\letter\wQ.png" />
+    <Resource Include="Images\letter\wR.png" />
+    <Resource Include="Images\lucena\bB.png" />
+    <Resource Include="Images\lucena\bK.png" />
+    <Resource Include="Images\lucena\bN.png" />
+    <Resource Include="Images\lucena\bP.png" />
+    <Resource Include="Images\lucena\bQ.png" />
+    <Resource Include="Images\lucena\bR.png" />
+    <Resource Include="Images\lucena\wB.png" />
+    <Resource Include="Images\lucena\wK.png" />
+    <Resource Include="Images\lucena\wN.png" />
+    <Resource Include="Images\lucena\wP.png" />
+    <Resource Include="Images\lucena\wQ.png" />
+    <Resource Include="Images\lucena\wR.png" />
+    <Resource Include="Images\maestro\bB.png" />
+    <Resource Include="Images\maestro\bK.png" />
+    <Resource Include="Images\maestro\bN.png" />
+    <Resource Include="Images\maestro\bP.png" />
+    <Resource Include="Images\maestro\bQ.png" />
+    <Resource Include="Images\maestro\bR.png" />
+    <Resource Include="Images\maestro\wB.png" />
+    <Resource Include="Images\maestro\wK.png" />
+    <Resource Include="Images\maestro\wN.png" />
+    <Resource Include="Images\maestro\wP.png" />
+    <Resource Include="Images\maestro\wQ.png" />
+    <Resource Include="Images\maestro\wR.png" />
+    <Resource Include="Images\magnetic\bB.png" />
+    <Resource Include="Images\magnetic\bK.png" />
+    <Resource Include="Images\magnetic\bN.png" />
+    <Resource Include="Images\magnetic\bP.png" />
+    <Resource Include="Images\magnetic\bQ.png" />
+    <Resource Include="Images\magnetic\bR.png" />
+    <Resource Include="Images\magnetic\wB.png" />
+    <Resource Include="Images\magnetic\wK.png" />
+    <Resource Include="Images\magnetic\wN.png" />
+    <Resource Include="Images\magnetic\wP.png" />
+    <Resource Include="Images\magnetic\wQ.png" />
+    <Resource Include="Images\magnetic\wR.png" />
+    <Resource Include="Images\marble\bB.png" />
+    <Resource Include="Images\marble\bK.png" />
+    <Resource Include="Images\marble\bN.png" />
+    <Resource Include="Images\marble\bP.png" />
+    <Resource Include="Images\marble\bQ.png" />
+    <Resource Include="Images\marble\bR.png" />
+    <Resource Include="Images\marble\wB.png" />
+    <Resource Include="Images\marble\wK.png" />
+    <Resource Include="Images\marble\wN.png" />
+    <Resource Include="Images\marble\wP.png" />
+    <Resource Include="Images\marble\wQ.png" />
+    <Resource Include="Images\marble\wR.png" />
+    <Resource Include="Images\maya\bB.png" />
+    <Resource Include="Images\maya\bK.png" />
+    <Resource Include="Images\maya\bN.png" />
+    <Resource Include="Images\maya\bP.png" />
+    <Resource Include="Images\maya\bQ.png" />
+    <Resource Include="Images\maya\bR.png" />
+    <Resource Include="Images\maya\wB.png" />
+    <Resource Include="Images\maya\wK.png" />
+    <Resource Include="Images\maya\wN.png" />
+    <Resource Include="Images\maya\wP.png" />
+    <Resource Include="Images\maya\wQ.png" />
+    <Resource Include="Images\maya\wR.png" />
+    <Resource Include="Images\mediaeval\bB.png" />
+    <Resource Include="Images\mediaeval\bK.png" />
+    <Resource Include="Images\mediaeval\bN.png" />
+    <Resource Include="Images\mediaeval\bP.png" />
+    <Resource Include="Images\mediaeval\bQ.png" />
+    <Resource Include="Images\mediaeval\bR.png" />
+    <Resource Include="Images\mediaeval\wB.png" />
+    <Resource Include="Images\mediaeval\wK.png" />
+    <Resource Include="Images\mediaeval\wN.png" />
+    <Resource Include="Images\mediaeval\wP.png" />
+    <Resource Include="Images\mediaeval\wQ.png" />
+    <Resource Include="Images\mediaeval\wR.png" />
+    <Resource Include="Images\merida\bB.png" />
+    <Resource Include="Images\merida\bK.png" />
+    <Resource Include="Images\merida\bN.png" />
+    <Resource Include="Images\merida\bP.png" />
+    <Resource Include="Images\merida\bQ.png" />
+    <Resource Include="Images\merida\bR.png" />
+    <Resource Include="Images\merida\wB.png" />
+    <Resource Include="Images\merida\wK.png" />
+    <Resource Include="Images\merida\wN.png" />
+    <Resource Include="Images\merida\wP.png" />
+    <Resource Include="Images\merida\wQ.png" />
+    <Resource Include="Images\merida\wR.png" />
+    <Resource Include="Images\metro\bB.png" />
+    <Resource Include="Images\metro\bK.png" />
+    <Resource Include="Images\metro\bN.png" />
+    <Resource Include="Images\metro\bP.png" />
+    <Resource Include="Images\metro\bQ.png" />
+    <Resource Include="Images\metro\bR.png" />
+    <Resource Include="Images\metro\wB.png" />
+    <Resource Include="Images\metro\wK.png" />
+    <Resource Include="Images\metro\wN.png" />
+    <Resource Include="Images\metro\wP.png" />
+    <Resource Include="Images\metro\wQ.png" />
+    <Resource Include="Images\metro\wR.png" />
+    <Resource Include="Images\pirouetti\bB.png" />
+    <Resource Include="Images\pirouetti\bK.png" />
+    <Resource Include="Images\pirouetti\bN.png" />
+    <Resource Include="Images\pirouetti\bP.png" />
+    <Resource Include="Images\pirouetti\bQ.png" />
+    <Resource Include="Images\pirouetti\bR.png" />
+    <Resource Include="Images\pirouetti\wB.png" />
+    <Resource Include="Images\pirouetti\wK.png" />
+    <Resource Include="Images\pirouetti\wN.png" />
+    <Resource Include="Images\pirouetti\wP.png" />
+    <Resource Include="Images\pirouetti\wQ.png" />
+    <Resource Include="Images\pirouetti\wR.png" />
+    <Resource Include="Images\pixel\bB.png" />
+    <Resource Include="Images\pixel\bK.png" />
+    <Resource Include="Images\pixel\bN.png" />
+    <Resource Include="Images\pixel\bP.png" />
+    <Resource Include="Images\pixel\bQ.png" />
+    <Resource Include="Images\pixel\bR.png" />
+    <Resource Include="Images\pixel\wB.png" />
+    <Resource Include="Images\pixel\wK.png" />
+    <Resource Include="Images\pixel\wN.png" />
+    <Resource Include="Images\pixel\wP.png" />
+    <Resource Include="Images\pixel\wQ.png" />
+    <Resource Include="Images\pixel\wR.png" />
+    <Resource Include="Images\reilly\bB.png" />
+    <Resource Include="Images\reilly\bK.png" />
+    <Resource Include="Images\reilly\bN.png" />
+    <Resource Include="Images\reilly\bP.png" />
+    <Resource Include="Images\reilly\bQ.png" />
+    <Resource Include="Images\reilly\bR.png" />
+    <Resource Include="Images\reilly\wB.png" />
+    <Resource Include="Images\reilly\wK.png" />
+    <Resource Include="Images\reilly\wN.png" />
+    <Resource Include="Images\reilly\wP.png" />
+    <Resource Include="Images\reilly\wQ.png" />
+    <Resource Include="Images\reilly\wR.png" />
+    <Resource Include="Images\riohacha\bB.png" />
+    <Resource Include="Images\riohacha\bK.png" />
+    <Resource Include="Images\riohacha\bN.png" />
+    <Resource Include="Images\riohacha\bP.png" />
+    <Resource Include="Images\riohacha\bQ.png" />
+    <Resource Include="Images\riohacha\bR.png" />
+    <Resource Include="Images\riohacha\wB.png" />
+    <Resource Include="Images\riohacha\wK.png" />
+    <Resource Include="Images\riohacha\wN.png" />
+    <Resource Include="Images\riohacha\wP.png" />
+    <Resource Include="Images\riohacha\wQ.png" />
+    <Resource Include="Images\riohacha\wR.png" />
+    <Resource Include="Images\shapes\bB.png" />
+    <Resource Include="Images\shapes\bK.png" />
+    <Resource Include="Images\shapes\bN.png" />
+    <Resource Include="Images\shapes\bP.png" />
+    <Resource Include="Images\shapes\bQ.png" />
+    <Resource Include="Images\shapes\bR.png" />
+    <Resource Include="Images\shapes\wB.png" />
+    <Resource Include="Images\shapes\wK.png" />
+    <Resource Include="Images\shapes\wN.png" />
+    <Resource Include="Images\shapes\wP.png" />
+    <Resource Include="Images\shapes\wQ.png" />
+    <Resource Include="Images\shapes\wR.png" />
+    <Content Include="Images\show.html" />
+    <Resource Include="Images\spatial\bB.png" />
+    <Resource Include="Images\spatial\bK.png" />
+    <Resource Include="Images\spatial\bN.png" />
+    <Resource Include="Images\spatial\bP.png" />
+    <Resource Include="Images\spatial\bQ.png" />
+    <Resource Include="Images\spatial\bR.png" />
+    <Resource Include="Images\spatial\wB.png" />
+    <Resource Include="Images\spatial\wK.png" />
+    <Resource Include="Images\spatial\wN.png" />
+    <Resource Include="Images\spatial\wP.png" />
+    <Resource Include="Images\spatial\wQ.png" />
+    <Resource Include="Images\spatial\wR.png" />
+    <Resource Include="Images\staunty\bB.png" />
+    <Resource Include="Images\staunty\bK.png" />
+    <Resource Include="Images\staunty\bN.png" />
+    <Resource Include="Images\staunty\bP.png" />
+    <Resource Include="Images\staunty\bQ.png" />
+    <Resource Include="Images\staunty\bR.png" />
+    <Resource Include="Images\staunty\wB.png" />
+    <Resource Include="Images\staunty\wK.png" />
+    <Resource Include="Images\staunty\wN.png" />
+    <Resource Include="Images\staunty\wP.png" />
+    <Resource Include="Images\staunty\wQ.png" />
+    <Resource Include="Images\staunty\wR.png" />
+    <Resource Include="Images\symbol\bB.png" />
+    <Resource Include="Images\symbol\bK.png" />
+    <Resource Include="Images\symbol\bN.png" />
+    <Resource Include="Images\symbol\bP.png" />
+    <Resource Include="Images\symbol\bQ.png" />
+    <Resource Include="Images\symbol\bR.png" />
+    <Resource Include="Images\symbol\wB.png" />
+    <Resource Include="Images\symbol\wK.png" />
+    <Resource Include="Images\symbol\wN.png" />
+    <Resource Include="Images\symbol\wP.png" />
+    <Resource Include="Images\symbol\wQ.png" />
+    <Resource Include="Images\symbol\wR.png" />
+    <Resource Include="Images\symmetric\bB.png" />
+    <Resource Include="Images\symmetric\bK.png" />
+    <Resource Include="Images\symmetric\bN.png" />
+    <Resource Include="Images\symmetric\bP.png" />
+    <Resource Include="Images\symmetric\bQ.png" />
+    <Resource Include="Images\symmetric\bR.png" />
+    <Resource Include="Images\symmetric\wB.png" />
+    <Resource Include="Images\symmetric\wK.png" />
+    <Resource Include="Images\symmetric\wN.png" />
+    <Resource Include="Images\symmetric\wP.png" />
+    <Resource Include="Images\symmetric\wQ.png" />
+    <Resource Include="Images\symmetric\wR.png" />
+    <Resource Include="Images\tatiana\bB.png" />
+    <Resource Include="Images\tatiana\bK.png" />
+    <Resource Include="Images\tatiana\bN.png" />
+    <Resource Include="Images\tatiana\bP.png" />
+    <Resource Include="Images\tatiana\bQ.png" />
+    <Resource Include="Images\tatiana\bR.png" />
+    <Resource Include="Images\tatiana\wB.png" />
+    <Resource Include="Images\tatiana\wK.png" />
+    <Resource Include="Images\tatiana\wN.png" />
+    <Resource Include="Images\tatiana\wP.png" />
+    <Resource Include="Images\tatiana\wQ.png" />
+    <Resource Include="Images\tatiana\wR.png" />
+    <Resource Include="Images\tournament\bB.png" />
+    <Resource Include="Images\tournament\bK.png" />
+    <Resource Include="Images\tournament\bN.png" />
+    <Resource Include="Images\tournament\bP.png" />
+    <Resource Include="Images\tournament\bQ.png" />
+    <Resource Include="Images\tournament\bR.png" />
+    <Resource Include="Images\tournament\wB.png" />
+    <Resource Include="Images\tournament\wK.png" />
+    <Resource Include="Images\tournament\wN.png" />
+    <Resource Include="Images\tournament\wP.png" />
+    <Resource Include="Images\tournament\wQ.png" />
+    <Resource Include="Images\tournament\wR.png" />
+    <Resource Include="Images\tournament_metal\bB.png" />
+    <Resource Include="Images\tournament_metal\bK.png" />
+    <Resource Include="Images\tournament_metal\bN.png" />
+    <Resource Include="Images\tournament_metal\bP.png" />
+    <Resource Include="Images\tournament_metal\bQ.png" />
+    <Resource Include="Images\tournament_metal\bR.png" />
+    <Resource Include="Images\tournament_metal\wB.png" />
+    <Resource Include="Images\tournament_metal\wK.png" />
+    <Resource Include="Images\tournament_metal\wN.png" />
+    <Resource Include="Images\tournament_metal\wP.png" />
+    <Resource Include="Images\tournament_metal\wQ.png" />
+    <Resource Include="Images\tournament_metal\wR.png" />
+    <Resource Include="Images\uscf\bB.png" />
+    <Resource Include="Images\uscf\bK.png" />
+    <Resource Include="Images\uscf\bN.png" />
+    <Resource Include="Images\uscf\bP.png" />
+    <Resource Include="Images\uscf\bQ.png" />
+    <Resource Include="Images\uscf\bR.png" />
+    <Resource Include="Images\uscf\wB.png" />
+    <Resource Include="Images\uscf\wK.png" />
+    <Resource Include="Images\uscf\wN.png" />
+    <Resource Include="Images\uscf\wP.png" />
+    <Resource Include="Images\uscf\wQ.png" />
+    <Resource Include="Images\uscf\wR.png" />
+    <Resource Include="Images\wikipedia\bB.png" />
+    <Resource Include="Images\wikipedia\bK.png" />
+    <Resource Include="Images\wikipedia\bN.png" />
+    <Resource Include="Images\wikipedia\bP.png" />
+    <Resource Include="Images\wikipedia\bQ.png" />
+    <Resource Include="Images\wikipedia\bR.png" />
+    <Resource Include="Images\wikipedia\wB.png" />
+    <Resource Include="Images\wikipedia\wK.png" />
+    <Resource Include="Images\wikipedia\wN.png" />
+    <Resource Include="Images\wikipedia\wP.png" />
+    <Resource Include="Images\wikipedia\wQ.png" />
+    <Resource Include="Images\wikipedia\wR.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
