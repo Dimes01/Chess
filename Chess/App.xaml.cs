@@ -14,14 +14,29 @@ namespace Chess
     /// </summary>
     public partial class App : Application
     {
-        public static CurrentStep CurrentStep { get; set; } = CurrentStep.White;
+        public static SideColor CurrentStep { get; set; } = SideColor.White;
         public static Cell SelectedCell { get; set; } = new Cell();
         public static Figure SelectedFigure { get; set; } = new Figure();
+        public static string PathStyleFigure { get; } = "dash";
+        public static string PathFolderFigure { get; } = "Images";
+
     }
 
-    public enum CurrentStep
+    #region Перечисления
+    public enum SideColor
     {
         White,
         Black
     }
+
+    public enum TypesFigures
+    {
+        Pawn,
+        Knight,
+        Bishop,
+        Rook,
+        Queen,
+        King
+    }
+    #endregion
 }

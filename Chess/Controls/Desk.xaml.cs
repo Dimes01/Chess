@@ -51,27 +51,65 @@ namespace Chess.Controls
         {
             for (char i = 'A'; i <= 'H'; ++i)
             {
-                Cells[$"{i}2"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/wP.png", Position = $"{i}2" });
-                Cells[$"{i}7"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/bP.png", Position = $"{i}7" });
+                Cells[$"{i}2"].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wP.png", Position = $"{i}2", Type = TypesFigures.Pawn, Side = SideColor.White });
+                Cells[$"{i}7"].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bP.png", Position = $"{i}7", Type = TypesFigures.Pawn, Side = SideColor.Black });
             }
+
+
             // Белые
-            Cells["A1"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/wR.png", Position = "A1" });
-            Cells["B1"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/wN.png", Position = "B1" });
-            Cells["C1"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/wB.png", Position = "C1" });
-            Cells["D1"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/wQ.png", Position = "D1" });
-            Cells["E1"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/wK.png", Position = "E1" });
-            Cells["F1"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/wB.png", Position = "F1" });
-            Cells["G1"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/wN.png", Position = "G1" });
-            Cells["H1"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/wR.png", Position = "H1" });
+            List<string> positions = FisherRandom(new List<string> { "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1" });
+            Cells[positions[0]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wR.png", Position = positions[0], Type = TypesFigures.Rook,    Side = SideColor.White });
+            Cells[positions[1]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wN.png", Position = positions[1], Type = TypesFigures.Knight,  Side = SideColor.White });
+            Cells[positions[2]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wB.png", Position = positions[2], Type = TypesFigures.Bishop,  Side = SideColor.White });
+            Cells[positions[3]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wQ.png", Position = positions[3], Type = TypesFigures.Queen,   Side = SideColor.White });
+            Cells[positions[4]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wK.png", Position = positions[4], Type = TypesFigures.King,    Side = SideColor.White });
+            Cells[positions[5]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wB.png", Position = positions[5], Type = TypesFigures.Bishop,  Side = SideColor.White });
+            Cells[positions[6]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wN.png", Position = positions[6], Type = TypesFigures.Knight,  Side = SideColor.White });
+            Cells[positions[7]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wR.png", Position = positions[7], Type = TypesFigures.Rook,    Side = SideColor.White });
             // Негры
-            Cells["A8"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/bR.png", Position = "A8" });
-            Cells["B8"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/bN.png", Position = "B8" });
-            Cells["C8"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/bB.png", Position = "C8" });
-            Cells["D8"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/bQ.png", Position = "D8" });
-            Cells["E8"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/bK.png", Position = "E8" });
-            Cells["F8"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/bB.png", Position = "F8" });
-            Cells["G8"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/bN.png", Position = "G8" });
-            Cells["H8"].AddChild(new Figure { ImageSource = "pack://application:,,,/Images/dash/bR.png", Position = "H8" });
+            for (int i = 0; i < positions.Count; ++i) positions[i] = positions[i].Replace('1', '8');
+            Cells[positions[0]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bR.png", Position = positions[0], Type = TypesFigures.Rook,    Side = SideColor.Black });
+            Cells[positions[1]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bN.png", Position = positions[1], Type = TypesFigures.Knight,  Side = SideColor.Black });
+            Cells[positions[2]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bB.png", Position = positions[2], Type = TypesFigures.Bishop,  Side = SideColor.Black });
+            Cells[positions[3]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bQ.png", Position = positions[3], Type = TypesFigures.Queen,   Side = SideColor.Black });
+            Cells[positions[4]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bK.png", Position = positions[4], Type = TypesFigures.King,    Side = SideColor.Black });
+            Cells[positions[5]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bB.png", Position = positions[5], Type = TypesFigures.Bishop,  Side = SideColor.Black });
+            Cells[positions[6]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bN.png", Position = positions[6], Type = TypesFigures.Knight,  Side = SideColor.Black });
+            Cells[positions[7]].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bR.png", Position = positions[7], Type = TypesFigures.Rook,    Side = SideColor.Black });
+        }
+
+        private List<string> FisherRandom(List<string> strings)
+        {
+            List<string> list = new List<string>(strings);
+            Random random = new Random();
+            string firstBishop = strings[2], secondBishop = strings[5];
+            string firstRook = strings[0], secondRook = strings[7];
+            string temp, king = strings[4];
+            int j, posFirstBishop, posSecondBishop, posKing, posFirstRook, posSecondRook;
+            bool flagForBishops = false, flagForRooks = false;
+            while(!flagForBishops || !flagForRooks)
+            {
+                list = new List<string>(strings);
+                flagForBishops = false;
+                flagForRooks = false;
+                for (int i = list.Count - 1; i >= 1; --i)
+                {
+                    j = random.Next(i + 1);
+                    temp = list[j];
+                    list[j] = list[i];
+                    list[i] = temp;
+                }
+                posFirstBishop = list.IndexOf(firstBishop);
+                posSecondBishop = list.IndexOf(secondBishop);
+                posKing = list.IndexOf(king);
+                posFirstRook = list.IndexOf(firstRook);
+                posSecondRook = list.IndexOf(secondRook);
+                if (posFirstBishop + posSecondBishop % 2 == 1) 
+                    flagForBishops = true;
+                if ((posFirstRook < posKing && posKing < posSecondRook) || (posFirstRook > posKing && posKing > posSecondRook))
+                    flagForRooks = true;
+            }
+            return list;
         }
 
 

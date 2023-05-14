@@ -27,21 +27,27 @@ namespace Chess.Controls
         }
 
 
-        public delegate void CalcMove();
-
-        public static readonly DependencyProperty MoveProperty = DependencyProperty.Register(nameof(Move), typeof(CalcMove), typeof(Figure));
-        public CalcMove Move
-        {
-            get { return (CalcMove)GetValue(MoveProperty); }
-            set { SetValue(MoveProperty, value); }
-        }
-
-
         public static readonly DependencyProperty ImageSourceProperty = DependencyProperty.Register(nameof(ImageSource), typeof(string), typeof(Figure));
         public string ImageSource
         {
             get { return (string)GetValue(ImageSourceProperty); }
             set { SetValue(ImageSourceProperty, value); }
+        }
+
+
+        public static readonly DependencyProperty TypeProperty = DependencyProperty.Register(nameof(Type), typeof(TypesFigures), typeof(Figure));
+        public TypesFigures Type
+        {
+            get { return (TypesFigures)GetValue(TypeProperty); }
+            set { SetValue(TypeProperty, value); }
+        }
+
+
+        public static readonly DependencyProperty SideProperty = DependencyProperty.Register(nameof(Side), typeof(SideColor), typeof(Figure));
+        public SideColor Side
+        {
+            get { return (SideColor)GetValue(SideProperty); }
+            set { SetValue(SideProperty, value); }
         }
 
 
@@ -54,8 +60,8 @@ namespace Chess.Controls
 
 
         private SolidColorBrush SelectedBrush = Brushes.Green;
-        public static readonly DependencyProperty BrushBorderProperty = DependencyProperty.Register(nameof(BrushBorder), typeof(SolidColorBrush), typeof(Figure), 
-            new PropertyMetadata(Brushes.Transparent));
+
+        public static readonly DependencyProperty BrushBorderProperty = DependencyProperty.Register(nameof(BrushBorder), typeof(SolidColorBrush), typeof(Figure), new PropertyMetadata(Brushes.Transparent));
         public SolidColorBrush BrushBorder
         {
             get { return (SolidColorBrush)GetValue(BrushBorderProperty); }
@@ -82,8 +88,11 @@ namespace Chess.Controls
 
         private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            IsSelected = true;
-            App.SelectedFigure = this;
+            if (Side == App.CurrentStep)
+            {
+                IsSelected = true;
+                App.SelectedFigure = this;
+            }
         }
     }
 }
