@@ -25,6 +25,9 @@ namespace Chess.Controls
             InitializeComponent();
         }
 
+        public void AddChild(Figure figure) => Border.Child = figure;
+        public void RemoveChild() => Border.Child = null;
+
 
         public static readonly DependencyProperty PositionProperty = DependencyProperty.Register(nameof(Position), typeof(string), typeof(Cell), new PropertyMetadata(""));
         public string Position
@@ -49,9 +52,6 @@ namespace Chess.Controls
             set { SetValue(IsSelectedProperty, value); }
         }
 
-
-        public void AddChild(Figure figure) => Border.Child = figure;
-        public void RemoveChild() => Border.Child = null;
 
         private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

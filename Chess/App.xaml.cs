@@ -17,7 +17,7 @@ namespace Chess
         public static SideColor CurrentStep { get; set; } = SideColor.White;
         public static Cell SelectedCell { get; set; } = new Cell();
         public static Figure SelectedFigure { get; set; } = new Figure();
-        public static string PathStyleFigure { get; } = "dash";
+        public static string PathStyleFigure { get; } = "glass";
         public static string PathFolderFigure { get; } = "Images";
 
     }

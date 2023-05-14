@@ -82,7 +82,6 @@ namespace Chess.Controls
             SolidColorBrush brush = new SolidColorBrush(figure.BrushBorder.Color);
             figure.BrushBorder = figure.SelectedBrush;
             figure.SelectedBrush = brush;
-            
         }
 
 
