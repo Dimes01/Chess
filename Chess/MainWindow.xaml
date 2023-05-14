@@ -8,7 +8,8 @@
         Title="MainWindow" Height="1080" Width="1920" WindowState="Maximized"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
     <Grid Name="MainGrid" Background="DimGray">
-        <fig:Desk Height="{Binding ElementName=MainGrid, Path=ActualHeight}"
+        <fig:Desk x:Name="MainDesk" 
+                  Height="{Binding ElementName=MainGrid, Path=ActualHeight}"
                   WhiteBrush="AntiqueWhite" BlackBrush="BurlyWood"/>
     </Grid>
 </Window>

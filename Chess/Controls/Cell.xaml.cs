@@ -26,6 +26,7 @@ namespace Chess.Controls
         }
 
         public void AddChild(Figure figure) => Border.Child = figure;
+        public Figure GetChild() => (Figure)Border.Child;
         public void RemoveChild() => Border.Child = null;
 
 
@@ -56,7 +57,7 @@ namespace Chess.Controls
         private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             IsSelected = true;
-            App.SelectedCell = this;
+            App.GameCondition.ChangeSelectedCell(this);
         }
     }
 }

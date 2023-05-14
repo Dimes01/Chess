@@ -1,4 +1,5 @@
 ﻿using Chess.Controls;
+using Chess.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -14,12 +15,10 @@ namespace Chess
     /// </summary>
     public partial class App : Application
     {
-        public static SideColor CurrentStep { get; set; } = SideColor.White;
-        public static Cell SelectedCell { get; set; } = new Cell();
-        public static Figure SelectedFigure { get; set; } = new Figure();
+        public static Desk Desk { get; set; }
+        public static GameCondition GameCondition { get; set; } = new GameCondition();
         public static string PathStyleFigure { get; } = "glass";
         public static string PathFolderFigure { get; } = "Images";
-
     }
 
     #region Перечисления
@@ -37,6 +36,13 @@ namespace Chess
         Rook,
         Queen,
         King
+    }
+
+    public enum Conditions
+    {
+        Stalemate,
+        Check,
+        Checkmate
     }
     #endregion
 }

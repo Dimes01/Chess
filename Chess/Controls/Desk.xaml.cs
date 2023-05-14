@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,10 @@ namespace Chess.Controls
             MakeDesk();
             MakeFigures();
         }
+
+
+        
+
 
 
         private void MakeDesk()
@@ -56,7 +61,7 @@ namespace Chess.Controls
             }
 
             // Белые
-            List<int> positions = FisherRandom(new List<string> { "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1" });
+            List<int> positions = Algorithms.FisherRandom(new List<string> { "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1" });
             Cells[$"{(char)(positions[0] + 'A')}1"].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wR.png", Position = $"{(char)(positions[0] + 'A')}1", Type = TypesFigures.Rook,    Side = SideColor.White });
             Cells[$"{(char)(positions[1] + 'A')}1"].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wN.png", Position = $"{(char)(positions[1] + 'A')}1", Type = TypesFigures.Knight,  Side = SideColor.White });
             Cells[$"{(char)(positions[2] + 'A')}1"].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wB.png", Position = $"{(char)(positions[2] + 'A')}1", Type = TypesFigures.Bishop,  Side = SideColor.White });
@@ -74,42 +79,6 @@ namespace Chess.Controls
             Cells[$"{(char)(positions[5] + 'A')}8"].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bB.png", Position = $"{(char)(positions[5] + 'A')}8", Type = TypesFigures.Bishop,  Side = SideColor.Black });
             Cells[$"{(char)(positions[6] + 'A')}8"].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bN.png", Position = $"{(char)(positions[6] + 'A')}8", Type = TypesFigures.Knight,  Side = SideColor.Black });
             Cells[$"{(char)(positions[7] + 'A')}8"].AddChild(new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bR.png", Position = $"{(char)(positions[7] + 'A')}8", Type = TypesFigures.Rook,    Side = SideColor.Black });
-        }
-
-        private List<int> FisherRandom(List<string> strings)
-        {
-            List<string> list = new List<string>(strings);
-            Random random = new Random();
-            string firstBishop = strings[2], secondBishop = strings[5];
-            string firstRook = strings[0], secondRook = strings[7];
-            string temp, king = strings[4];
-            int j, posFirstBishop, posSecondBishop, posKing, posFirstRook, posSecondRook;
-            bool flagForBishops = false, flagForRooks = false;
-            while(!flagForBishops || !flagForRooks)
-            {
-                list = new List<string>(strings);
-                flagForBishops = false;
-                flagForRooks = false;
-                for (int i = list.Count - 1; i >= 1; --i)
-                {
-                    j = random.Next(i + 1);
-                    temp = list[j];
-                    list[j] = list[i];
-                    list[i] = temp;
-                }
-                posFirstBishop = list.IndexOf(firstBishop);
-                posSecondBishop = list.IndexOf(secondBishop);
-                posKing = list.IndexOf(king);
-                posFirstRook = list.IndexOf(firstRook);
-                posSecondRook = list.IndexOf(secondRook);
-                if ((posFirstBishop + posSecondBishop) % 2 == 1) 
-                    flagForBishops = true;
-                if ((posFirstRook < posKing && posKing < posSecondRook) || (posFirstRook > posKing && posKing > posSecondRook))
-                    flagForRooks = true;
-            }
-            List<int> nums = new List<int>();
-            for (int i = 0; i < strings.Count; ++i) nums.Add(list.IndexOf(strings[i]));
-            return nums;
         }
 
 
@@ -157,8 +126,8 @@ namespace Chess.Controls
 
         private void DeskGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            App.SelectedCell.IsSelected = false;
-            App.SelectedFigure.IsSelected = false;
+            App.GameCondition.SelectedCell.IsSelected = false;
+            App.GameCondition.SelectedFigure.IsSelected = false;
         }
     }
 }

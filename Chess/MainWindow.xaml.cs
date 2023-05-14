@@ -24,6 +24,7 @@ namespace Chess
         public MainWindow()
         {
             InitializeComponent();
+            App.Desk = MainDesk;
         }
     }
 }

@@ -27,6 +27,9 @@ namespace Chess.Controls
         }
 
 
+        public int CountMoves { get; set; }
+
+
         public static readonly DependencyProperty ImageSourceProperty = DependencyProperty.Register(nameof(ImageSource), typeof(string), typeof(Figure));
         public string ImageSource
         {
@@ -87,10 +90,10 @@ namespace Chess.Controls
 
         private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (Side == App.CurrentStep)
+            if (Side == App.GameCondition.CurrentStep)
             {
                 IsSelected = true;
-                App.SelectedFigure = this;
+                App.GameCondition.ChangeSelectedFigure(this);
             }
         }
     }

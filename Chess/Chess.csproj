@@ -64,8 +64,8 @@
     <Compile Include="Controls\Figure.xaml.cs">
       <DependentUpon>Figure.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\AllMoves.cs" />
-    <Compile Include="Models\Desk.cs" />
+    <Compile Include="Models\Algorithms.cs" />
+    <Compile Include="Models\GameCondition.cs" />
     <Compile Include="Utilities\RelayCommand.cs" />
     <Page Include="Controls\Cell.xaml">
       <SubType>Designer</SubType>
@@ -93,7 +93,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Figure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
