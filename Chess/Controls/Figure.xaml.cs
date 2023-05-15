@@ -28,6 +28,7 @@ namespace Chess.Controls
 
 
         public int CountMoves { get; set; }
+        public List<Figure> AttackingFigures { get; set; }
 
 
         public static readonly DependencyProperty ImageSourceProperty = DependencyProperty.Register(nameof(ImageSource), typeof(string), typeof(Figure));

@@ -132,7 +132,41 @@ namespace Chess.Models
 
         };
 
-        public static void CalculatePossibleMove()
+        public static void CalculatePossibleMove(Figure figure, List<string> possibleMoves)
+        {
+            CheckCheck();
+            for (int i = 0; i < figure.AttackingFigures.Count; ++i)
+            {
+                
+            }
+        }
+
+        private static void CheckCheck()
+        {
+
+        }
+
+        private static void PossibleMovesPawn()
+        {
+
+        }
+
+        private static void PossibleMovesKnight()
+        {
+
+        }
+
+        private static void PossibleMovesBishop()
+        {
+
+        }
+
+        private static void PossibleMovesQueen()
+        {
+
+        }
+
+        private static void PossibleMovesKing()
         {
 
         }
