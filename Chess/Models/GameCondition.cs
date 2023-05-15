@@ -16,6 +16,7 @@ namespace Chess.Models
         public void ChangeSelectedCell(Cell cell)
         {
             SelectedCell = cell;
+            App.Desk.MarkedCells = new List<string>();
         }
 
         public void ChangeSelectedFigure(Figure figure)

@@ -57,7 +57,7 @@ namespace Chess.Models
             Figure figure = App.Desk.Cells[Str(pos0, pos1)].ChildFigure;
             if (figure != null)
             {
-                isEnemy = figure.Type != App.GameCondition.SelectedFigure.Type;
+                isEnemy = figure.Side != App.GameCondition.SelectedFigure.Side;
                 isFriend = !isEnemy;
             }
             return (figure == null) || isEnemy;
