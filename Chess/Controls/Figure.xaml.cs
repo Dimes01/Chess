@@ -26,8 +26,9 @@ namespace Chess.Controls
             InitializeComponent();
         }
 
-
+        public bool CanMove { get; set; } = true;
         public int CountMoves { get; set; }
+        public List<string> PossibleMoves { get; set; }
         public List<Figure> AttackingFigures { get; set; }
 
 

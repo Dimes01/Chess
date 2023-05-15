@@ -45,130 +45,171 @@ namespace Chess.Models
             return nums;
         }
 
+        private static string Str(int pos0, int pos1) => $"{(char)pos0}{(char)pos1}";
+        private static bool CheckCell(int pos0, int pos1, bool outDesk = false, bool isEnemy = false, bool isFriend = false)
+        {
+            outDesk = false; isEnemy = false; isFriend = false;
+            if ((pos0 < 'A') || (pos0 > 'H') || (pos1 < '1') || (pos1 > '8'))
+            {
+                outDesk = true;
+                return false;
+            }
+            Figure figure = App.Desk.Cells[Str(pos0, pos1)].ChildFigure;
+            if (figure != null)
+            {
+                isEnemy = figure.Type != App.GameCondition.SelectedFigure.Type;
+                isFriend = !isEnemy;
+            }
+            return (figure == null) || isEnemy;
+        }
+        private static bool CheckConflictKings(Figure figure, int pos0, int pos1)
+        {
+            Figure conflictFigure;
+            if (figure == App.Desk.WhiteKing) conflictFigure = App.Desk.BlackKing;
+            else conflictFigure = App.Desk.WhiteKing;
+
+            return Math.Abs(conflictFigure.Position[0] - pos0) >= 2 && Math.Abs(conflictFigure.Position[1] - pos1) >= 2;
+        }
+
         #region Подсчёт всевозможных ходов
 
-        private delegate void CalcAllMove(string position, List<string> allMoves, int countMove);
-        private static Dictionary<TypesFigures, CalcAllMove> CalculationsAllMoves = new Dictionary<TypesFigures, CalcAllMove>
+        private delegate void CalcPossibleMove(Figure figure, List<string> possibleMoves);
+        private static Dictionary<TypesFigures, CalcPossibleMove> CalculationsMoves = new Dictionary<TypesFigures, CalcPossibleMove>
         {
-            { TypesFigures.Pawn,     AllMovesPawn   },
-            { TypesFigures.Knight,   AllMovesKnight },
-            { TypesFigures.Bishop,   AllMovesBishop },
-            { TypesFigures.Rook,     AllMovesRook   },
-            { TypesFigures.Queen,    AllMovesQueen  },
-            { TypesFigures.King,     AllMovesKing   },
+            { TypesFigures.Pawn,     PossibleMovesPawn   },
+            { TypesFigures.Knight,   PossibleMovesKnight },
+            { TypesFigures.Bishop,   PossibleMovesBishop },
+            { TypesFigures.Rook,     PossibleMovesRook   },
+            { TypesFigures.Queen,    PossibleMovesQueen  },
+            { TypesFigures.King,     PossibleMovesKing   },
         };
 
-        public static void CalculateAllMoves(Figure figure, List<string> allMoves)
+        public static void CalculatePossibleMoves(Figure figure)
         {
-            allMoves.Clear();
-            CalculationsAllMoves[figure.Type](figure.Position, allMoves, figure.CountMoves);
+            if (!figure.CanMove) return;
+            List<string> possibleMoves = new List<string>();
+            CalculationsMoves[figure.Type](figure, possibleMoves);
+            figure.PossibleMoves = possibleMoves;
         }
 
-        private static void AllMovesPawn(string position, List<string> allMoves, int countMove)
+        private static void PossibleMovesPawn(Figure figure, List<string> possibleMoves)
         {
-            if (position[1] <= '7')
+            bool outDesk = false, isEnemy = false, isFriend = false;
+            string position = figure.Position;
+            if (CheckCell(position[0], position[1] + 1))
             {
-                allMoves.Add($"{position[0]}{position[1] + 1}");
-                if (countMove == 0) allMoves.Add($"{position[0]}{position[1] + 2}");
-            }
-            if (position[0] <= 'G') allMoves.Add($"{position[0] + 1}{position[1] + 1}");
-            if (position[0] >= 'B') allMoves.Add($"{position[0] - 1}{position[1] + 1}");
-        }
-
-        private static void AllMovesKnight(string position, List<string> allMoves, int countMove)
-        {
-            if (position[0] + 2 <= 'H' && position[1] + 1 <= '8') allMoves.Add($"{position[0] + 2}{position[1] + 1}");
-            if (position[0] + 1 <= 'H' && position[1] + 2 <= '8') allMoves.Add($"{position[0] + 1}{position[1] + 2}");
-            if (position[0] - 1 >= 'A' && position[1] + 2 <= '8') allMoves.Add($"{position[0] - 1}{position[1] + 2}");
-            if (position[0] - 2 >= 'A' && position[1] + 1 <= '8') allMoves.Add($"{position[0] - 2}{position[1] + 1}");
-            if (position[0] - 2 >= 'A' && position[1] - 1 >= '1') allMoves.Add($"{position[0] - 2}{position[1] - 1}");
-            if (position[0] - 1 >= 'A' && position[1] - 2 >= '1') allMoves.Add($"{position[0] - 1}{position[1] - 2}");
-            if (position[0] + 1 <= 'H' && position[1] - 2 >= '1') allMoves.Add($"{position[0] + 1}{position[1] - 2}");
-            if (position[0] + 2 <= 'H' && position[1] - 1 >= '1') allMoves.Add($"{position[0] + 2}{position[1] - 1}");
-        }
-
-        private static void AllMovesBishop(string position, List<string> allMoves, int countMove)
-        {
-            char c, s;
-            for (c = (char)(position[0] + 1), s = (char)(position[1] + 1); c <= 'H' && s <= '8'; ++c, ++s) allMoves.Add($"{c}{s}");
-            for (c = (char)(position[0] - 1), s = (char)(position[1] + 1); c >= 'A' && s <= '8'; --c, ++s) allMoves.Add($"{c}{s}");
-            for (c = (char)(position[0] - 1), s = (char)(position[1] - 1); c >= 'A' && s >= '1'; --c, --s) allMoves.Add($"{c}{s}");
-            for (c = (char)(position[0] + 1), s = (char)(position[1] - 1); c <= 'H' && s >= '1'; ++c, --s) allMoves.Add($"{c}{s}");
-        }
-
-        private static void AllMovesRook(string position, List<string> allMoves, int countMove)
-        {
-            for (char i = position[0]; i <= 'H'; ++i) allMoves.Add($"{i}{position[1]}");
-            for (char i = position[1]; i <= '8'; ++i) allMoves.Add($"{position[1]}{i}");
-            for (char i = position[0]; i >= 'A'; --i) allMoves.Add($"{i}{position[1]}");
-            for (char i = position[1]; i >= '1'; --i) allMoves.Add($"{position[1]}{i}");
-        }
-
-        private static void AllMovesQueen(string position, List<string> allMoves, int countMove)
-        {
-            AllMovesRook(position, allMoves, countMove);
-            AllMovesBishop(position, allMoves, countMove);
-        }
-
-        private static void AllMovesKing(string position, List<string> allMoves, int countMove)
-        {
-            if (position[0] + 1 <= 'H') allMoves.Add($"{(char)(position[0] + 1)}{position[1]}");
-            if (position[0] + 1 <= 'H' && position[1] + 1 <= '8') allMoves.Add($"{(char)(position[0] + 1)}{(char)(position[1] + 1)}");
-            if (position[1] + 1 <= '8') allMoves.Add($"{position[0]}{(char)(position[1] + 1)}");
-            if (position[0] - 1 >= 'A' && position[1] + 1 <= '8') allMoves.Add($"{(char)(position[0] - 1)}{(char)(position[1] + 1)}");
-            if (position[0] - 1 >= 'A') allMoves.Add($"{(char)(position[0] - 1)}{position[1]}");
-            if (position[0] - 1 >= 'A' && position[1] - 1 >= '1') allMoves.Add($"{(char)(position[0] - 1)}{(char)(position[1] - 1)}");
-            if (position[1] - 1 >= '1') allMoves.Add($"{position[0]}{(char)(position[1] - 1)}");
-            if (position[0] + 1 <= 'H' && position[1] - 1 >= '1') allMoves.Add($"{(char)(position[0] + 1)}{(char)(position[1] - 1)}");
-        }
-
-        #endregion
-
-        #region Подсчёт возможных на данный момент ходов
-
-        private delegate void CalcPossibleMove(Figure figure, List<string> allMoves, List<Cell> cells);
-        private static Dictionary<TypesFigures, CalcPossibleMove> CalculationsPossibleMoves = new Dictionary<TypesFigures, CalcPossibleMove>
-        {
-
-        };
-
-        public static void CalculatePossibleMove(Figure figure, List<string> possibleMoves)
-        {
-            CheckCheck();
-            for (int i = 0; i < figure.AttackingFigures.Count; ++i)
-            {
-                
+                possibleMoves.Add(Str(position[0], position[1] + 1));
+                if (figure.CountMoves == 0 && CheckCell(position[0], position[1] + 2)) 
+                    possibleMoves.Add(Str(position[0], position[1] + 2));
+                if (CheckCell(position[0] + 1, position[1] + 1, outDesk, isEnemy, isFriend) && isEnemy) possibleMoves.Add(Str(position[0] + 1, position[1] + 1));
+                if (CheckCell(position[0] - 1, position[1] + 1, outDesk, isEnemy, isFriend) && isEnemy) possibleMoves.Add(Str(position[0] - 1, position[1] + 1));
             }
         }
 
-        private static void CheckCheck()
+        private static void PossibleMovesKnight(Figure figure, List<string> possibleMoves)
         {
+            string position = figure.Position;
+            int a = position[0] + 2, b = position[1] + 1;
+            if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
 
+            a = position[0] + 1; b = position[1] + 2;
+            if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+
+            a = position[0] - 1; b = position[1] + 2;
+            if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+
+            a = position[0] - 2; b = position[1] + 1;
+            if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+
+            a = position[0] - 2; b = position[1] - 1;
+            if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+
+            a = position[0] - 1; b = position[1] - 2;
+            if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+
+            a = position[0] + 1; b = position[1] - 2;
+            if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+
+            a = position[0] + 2; b = position[1] - 1;
+            if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
         }
 
-        private static void PossibleMovesPawn()
+        private static void PossibleMovesBishop(Figure figure, List<string> possibleMoves)
         {
+            int a, b;
+            bool outDesk = false, isEnemy = false, isFriend = false;
+            string position = figure.Position;
+            for (a = position[0] + 1, b = position[1] + 1; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); ++a, ++b) possibleMoves.Add(Str(a, b));
+            if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
 
+            outDesk = false; isEnemy = false; isFriend = false;
+            for (a = position[0] - 1, b = position[1] + 1; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); --a, ++b) possibleMoves.Add(Str(a, b));
+            if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
+
+            outDesk = false; isEnemy = false; isFriend = false;
+            for (a = position[0] - 1, b = position[1] - 1; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); --a, --b) possibleMoves.Add(Str(a, b));
+            if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
+
+            outDesk = false; isEnemy = false; isFriend = false;
+            for (a = position[0] + 1, b = position[1] - 1; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); ++a, --b) possibleMoves.Add(Str(a, b));
+            if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
         }
 
-        private static void PossibleMovesKnight()
+        private static void PossibleMovesRook(Figure figure, List<string> possibleMoves)
         {
+            int a, b;
+            bool outDesk = false, isEnemy = false, isFriend = false;
+            string position = figure.Position;
+            for (a = position[0] + 1, b = position[1]; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); ++a) possibleMoves.Add(Str(a, b));
+            if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
 
+            outDesk = false; isEnemy = false; isFriend = false;
+            for (a = position[0], b = position[1] + 1; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); ++b) possibleMoves.Add(Str(a, b));
+            if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
+
+            outDesk = false; isEnemy = false; isFriend = false;
+            for (a = position[0] - 1, b = position[1]; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); --a) possibleMoves.Add(Str(a, b));
+            if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
+
+            outDesk = false; isEnemy = false; isFriend = false;
+            for (a = position[0], b = position[1] - 1; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); --b) possibleMoves.Add(Str(a, b));
+            if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
         }
 
-        private static void PossibleMovesBishop()
+        private static void PossibleMovesQueen(Figure figure, List<string> possibleMoves)
         {
-
+            PossibleMovesRook(figure, possibleMoves);
+            PossibleMovesBishop(figure, possibleMoves);
         }
 
-        private static void PossibleMovesQueen()
+        private static void PossibleMovesKing(Figure figure, List<string> possibleMoves)
         {
+            int a, b;
+            string position = figure.Position;
 
-        }
+            a = position[0] + 1; b = position[1];
+            if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
 
-        private static void PossibleMovesKing()
-        {
+            a = position[0] + 1; b = position[1] + 1;
+            if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
 
+            a = position[0]; b = position[1] + 1;
+            if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
+
+            a = position[0] - 1; b = position[1] + 1;
+            if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
+
+            a = position[0] - 1; b = position[1];
+            if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
+
+            a = position[0] - 1; b = position[1] - 1;
+            if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
+
+            a = position[0]; b = position[1] - 1;
+            if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
+
+            a = position[0] + 1; b = position[1] - 1;
+            if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
         }
 
         #endregion

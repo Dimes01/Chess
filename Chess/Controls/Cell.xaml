@@ -3,11 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conv="clr-namespace:Chess.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400"
              DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
-    <Border x:Name="Border" 
+    <UserControl.Resources>
+        <conv:HalfLength x:Key="HalfLength"/>
+    </UserControl.Resources>
+    <Border PreviewMouseLeftButtonDown="Border_PreviewMouseLeftButtonDown"
             Background="{Binding BackBrush, Mode=OneWay}"
-            PreviewMouseLeftButtonDown="Border_PreviewMouseLeftButtonDown"
-            Padding="5"/>
+            Padding="5">
+        <Grid x:Name="CellGrid">
+            <Ellipse Height="{Binding ElementName=CellGrid, Path=ActualHeight, Converter={StaticResource HalfLength}}"
+                     Width="{Binding ElementName=CellGrid, Path=ActualWidth, Converter={StaticResource HalfLength}}"
+                     Fill="Green"
+                     Visibility="{Binding Marked, Mode=OneWay}"/>
+        </Grid>
+    </Border>
 </UserControl>

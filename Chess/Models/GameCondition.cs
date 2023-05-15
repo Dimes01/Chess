@@ -12,9 +12,6 @@ namespace Chess.Models
         public SideColor CurrentStep { get; private set; } = SideColor.White;
         public Cell SelectedCell { get; private set; } = new Cell();
         public Figure SelectedFigure { get; private set; } = new Figure();
-        public List<string> PossibleMoves { get; private set; } = new List<string>();
-        private List<string> AllMovesFigure { get; set; } = new List<string>();
-        private List<string> AllMoves { get; set; } = new List<string>();
 
         public void ChangeSelectedCell(Cell cell)
         {
@@ -24,19 +21,8 @@ namespace Chess.Models
         public void ChangeSelectedFigure(Figure figure)
         {
             SelectedFigure = figure;
-
-        }
-
-        private void UpdatePossibleMoves()
-        {
-            UpdateAllMoves(SelectedFigure);
-
-
-        }
-
-        private void UpdateAllMoves(Figure figure)
-        {
-            Algorithms.CalculateAllMoves(figure, AllMovesFigure);
+            Algorithms.CalculatePossibleMoves(SelectedFigure);
+            App.Desk.MarkedCells = SelectedFigure.PossibleMoves;
         }
     }
 }

@@ -25,9 +25,19 @@ namespace Chess.Controls
             InitializeComponent();
         }
 
-        public void AddChild(Figure figure) => Border.Child = figure;
-        public Figure GetChild() => (Figure)Border.Child;
-        public void RemoveChild() => Border.Child = null;
+
+        private Figure _childFigure;
+        public Figure ChildFigure 
+        { 
+            get => _childFigure;
+            set
+            {
+                if (_childFigure == value) return;
+                CellGrid.Children.Remove(_childFigure);
+                _childFigure = value;
+                CellGrid.Children.Add(_childFigure);
+            }
+        }
 
 
         public static readonly DependencyProperty PositionProperty = DependencyProperty.Register(nameof(Position), typeof(string), typeof(Cell), new PropertyMetadata(""));
@@ -51,6 +61,14 @@ namespace Chess.Controls
         {
             get { return (bool)GetValue(IsSelectedProperty); }
             set { SetValue(IsSelectedProperty, value); }
+        }
+
+
+        public static readonly DependencyProperty MarkedProperty = DependencyProperty.Register(nameof(Marked), typeof(Visibility), typeof(Cell), new FrameworkPropertyMetadata(Visibility.Collapsed));
+        public Visibility Marked
+        {
+            get { return (Visibility)GetValue(MarkedProperty); }
+            set { SetValue(MarkedProperty, value); }
         }
 
 
