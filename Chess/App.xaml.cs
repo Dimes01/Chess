@@ -12,6 +12,9 @@ namespace Chess
 {
     /// <summary>
     /// Логика взаимодействия для App.xaml
+    /// 
+    /// НАСЛАЖДАЙТЕСЬ!!!
+    /// 
     /// </summary>
     public partial class App : Application
     {

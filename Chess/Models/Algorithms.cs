@@ -45,8 +45,13 @@ namespace Chess.Models
             return nums;
         }
 
+        // Упрощение форматирования строки
         private static string Str(int pos0, int pos1) => $"{(char)pos0}{(char)pos1}";
 
+        // Проверка клетки на возможность хода на неё.
+        // outDesk = true означает, что клетка вне доски
+        // isEnemy = true означает, что на клетке вражеская фигура
+        // isFriend = true означает, что на клетке дружеская фигура
         private static bool CheckCell(int pos0, int pos1, bool outDesk = false, bool isEnemy = false, bool isFriend = false)
         {
             outDesk = false; isEnemy = false; isFriend = false;
@@ -64,6 +69,7 @@ namespace Chess.Models
             return (figure == null) || isEnemy;
         }
 
+        // Используется для недопущения нахождения королей рядом друг с другом
         private static bool CheckConflictKings(Figure figure, int pos0, int pos1)
         {
             Figure conflictFigure;
@@ -73,11 +79,14 @@ namespace Chess.Models
             return Math.Abs(conflictFigure.Position[0] - pos0) >= 2 && Math.Abs(conflictFigure.Position[1] - pos1) >= 2;
         }
 
+        // недописаная проверка на мат, которая, по идее, должна быть после обновления состояний всех фигур
         private static bool CheckCheckmate()
         {
             return false;
         }
 
+        // нейминг говно. Метод используется тогда, когда во время обновления состояний на проверяемой клетке оказалась вражеская фигура.
+        // метод добавляет информацию атакуемой фигуре о том, кто её атакует, и, если атакуемая фигура связана, то запрещает ей ходить
         private static void CheckCondition(Figure figure, int countAtack, int a, int b, List<Figure> wasAtacked = null)
         {
             countAtack += 1;
@@ -117,9 +126,9 @@ namespace Chess.Models
             if (figure.Side == SideColor.White) side = 1;
             else side = -1;
             int a = position[0], b = position[1] + 1 * side;
-            if (CheckCell(a, b))
+            if (CheckCell(a, b, outDesk, isEnemy, isFriend))
             {
-                possibleMoves.Add(Str(a, b));
+                if (!isEnemy && !isFriend) possibleMoves.Add(Str(a, b));
                 b = position[1] + 2 * side;
                 if (figure.CountMoves == 0 && CheckCell(a, b)) 
                     possibleMoves.Add(Str(a, b));
@@ -163,15 +172,20 @@ namespace Chess.Models
             int a, b;
             bool outDesk = false, isEnemy = false, isFriend = false;
             string position = figure.Position;
+
+            // Перебор вправо вверх
             for (a = position[0] + 1, b = position[1] + 1; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); ++a, ++b) possibleMoves.Add(Str(a, b));
             if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
 
+            // Перебор влево вверх
             for (a = position[0] - 1, b = position[1] + 1; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); --a, ++b) possibleMoves.Add(Str(a, b));
             if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
 
+            // Перебор Влево вниз
             for (a = position[0] - 1, b = position[1] - 1; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); --a, --b) possibleMoves.Add(Str(a, b));
             if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
 
+            // Перебор вправо вниз
             for (a = position[0] + 1, b = position[1] - 1; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); ++a, --b) possibleMoves.Add(Str(a, b));
             if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
         }
@@ -181,15 +195,20 @@ namespace Chess.Models
             int a, b;
             bool outDesk = false, isEnemy = false, isFriend = false;
             string position = figure.Position;
+
+            // Перебор вправо
             for (a = position[0] + 1, b = position[1]; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); ++a) possibleMoves.Add(Str(a, b));
             if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
 
+            // Перебор вверх
             for (a = position[0], b = position[1] + 1; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); ++b) possibleMoves.Add(Str(a, b));
             if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
 
+            // Перебор влево
             for (a = position[0] - 1, b = position[1]; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); --a) possibleMoves.Add(Str(a, b));
             if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
 
+            // Перебор вниз
             for (a = position[0], b = position[1] - 1; CheckCell(a, b, outDesk, isEnemy, isFriend) && (!isEnemy || !isFriend); --b) possibleMoves.Add(Str(a, b));
             if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
         }
@@ -204,6 +223,8 @@ namespace Chess.Models
         {
             int a, b;
             string position = figure.Position;
+
+            // Поочередный перебор всех клеток
             a = position[0] + 1; b = position[1];
             if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
 
@@ -252,19 +273,20 @@ namespace Chess.Models
             CheckCheckmate();
         }
 
+        // Главное в обновлении состояний - найти фигуры, которые атакует текущая перебираемая фигура
         private static void UpdateConditionsPawn(Figure figure)
         {
             bool outDesk = false, isEnemy = false, isFriend = false;
             int side, countAtack = 0;
             if (figure.Side == SideColor.White) side = 1;
             else side = -1;
-
             int a = figure.Position[0] + 1, b = figure.Position[1] + 1 * side;
             if (CheckCell(a, b, outDesk, isEnemy, isFriend) && isEnemy) CheckCondition(figure, countAtack, a, b);
             a = figure.Position[0] - 1; countAtack = 0;
             if (CheckCell(a, b, outDesk, isEnemy, isFriend) && isEnemy) CheckCondition(figure, countAtack, a, b);
         }
 
+        // Конь атакует любые клетки
         private static void UpdateConditionsKnight(Figure figure)
         {
             bool outDesk = false, isEnemy = false, isFriend = false;
@@ -293,11 +315,14 @@ namespace Chess.Models
             if (CheckCell(a, b, outDesk, isEnemy, isFriend) && isEnemy) CheckCondition(figure, countAtack, a, b);
         }
 
+
         private static void UpdateConditionsBishop(Figure figure)
         {
             int a, b, countAtack = 0;
             List<Figure> wasAtacked = new List<Figure>();
             bool outDesk = false, isEnemy = false, isFriend = false;
+
+            // Логичнее добавить условие перебора до тех пор, пока countAtack <= 2
             for (a = figure.Position[0] + 1, b = figure.Position[1] + 1; CheckCell(a, b, outDesk, isEnemy, isFriend) && !isFriend; ++a, ++b) 
                 if (isEnemy) CheckCondition(figure, countAtack, a, b);
             if (!outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
@@ -319,6 +344,8 @@ namespace Chess.Models
         {
             int a, b, countAtack = 0;
             bool outDesk = false, isEnemy = false, isFriend = false;
+
+            // Логичнее добавить условие перебора до тех пор, пока countAtack <= 2
             for (a = figure.Position[0] + 1, b = figure.Position[1]; CheckCell(a, b, outDesk, isEnemy, isFriend) && !isFriend; ++a) { }
             if (!outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
 
@@ -341,6 +368,7 @@ namespace Chess.Models
             UpdateConditionsBishop(figure);
         }
 
+        // Недописано для короля. Нужен самый блять тупой перебор
         private static void UpdateConditionsKing(Figure figure)
         {
             return;
