@@ -11,11 +11,14 @@ namespace Chess.Models
     {
         public SideColor CurrentStep { get; private set; } = SideColor.White;
         public Cell SelectedCell { get; private set; } = new Cell();
+        public Cell CellWithSelectedFigure { get; private set; }
         public Figure SelectedFigure { get; private set; } = new Figure();
 
         public void ChangeSelectedCell(Cell cell)
         {
+            if (cell.ChildFigure != null) CellWithSelectedFigure = cell;
             SelectedCell = cell;
+            MakeMove();
             App.Desk.MarkedCells = new List<string>();
         }
 
@@ -23,7 +26,22 @@ namespace Chess.Models
         {
             SelectedFigure = figure;
             Algorithms.CalculatePossibleMoves(SelectedFigure);
-            App.Desk.MarkedCells = SelectedFigure.PossibleMoves;
+            App.Desk.MarkedCells = new List<string>(SelectedFigure.PossibleMoves);
+        }
+
+        private void MakeMove()
+        {
+            if (App.Desk.MarkedCells == null || App.Desk.MarkedCells.Count == 0) return;
+            if (App.Desk.MarkedCells.Contains(SelectedCell.Position))
+            {
+                App.Desk.ClearConditions();
+                CellWithSelectedFigure.RemoveFigure();
+                SelectedFigure.Position = SelectedCell.Position;
+                SelectedCell.ChildFigure = SelectedFigure;
+                Algorithms.UpdateConditionFigures();
+                if (CurrentStep == SideColor.White) CurrentStep = SideColor.Black;
+                else CurrentStep = SideColor.White;
+            }
         }
     }
 }

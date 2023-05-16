@@ -31,7 +31,8 @@ namespace Chess.Controls
 
         public Figure WhiteKing { get; private set; }
         public Figure BlackKing { get; private set; }
-
+        public List<Figure> AllFigures { get; private set; } = new List<Figure>();
+        
 
         private void MakeDesk()
         {
@@ -58,6 +59,8 @@ namespace Chess.Controls
             {
                 Cells[$"{i}2"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wP.png", Position = $"{i}2", Type = TypesFigures.Pawn, Side = SideColor.White };
                 Cells[$"{i}7"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bP.png", Position = $"{i}7", Type = TypesFigures.Pawn, Side = SideColor.Black };
+                AllFigures.Add(Cells[$"{i}2"].ChildFigure);
+                AllFigures.Add(Cells[$"{i}7"].ChildFigure);
             }
 
             // Люди
@@ -70,6 +73,8 @@ namespace Chess.Controls
             Cells[$"{(char)(positions[5] + 'A')}1"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wB.png", Position = $"{(char)(positions[5] + 'A')}1", Type = TypesFigures.Bishop,  Side = SideColor.White };
             Cells[$"{(char)(positions[6] + 'A')}1"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wN.png", Position = $"{(char)(positions[6] + 'A')}1", Type = TypesFigures.Knight,  Side = SideColor.White };
             Cells[$"{(char)(positions[7] + 'A')}1"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wR.png", Position = $"{(char)(positions[7] + 'A')}1", Type = TypesFigures.Rook,    Side = SideColor.White };
+            for (int i = 0; i < positions.Count; ++i) AllFigures.Add(Cells[$"{(char)(positions[i] + 'A')}1"].ChildFigure);
+
             // Негры
             Cells[$"{(char)(positions[0] + 'A')}8"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bR.png", Position = $"{(char)(positions[0] + 'A')}8", Type = TypesFigures.Rook,    Side = SideColor.Black };
             Cells[$"{(char)(positions[1] + 'A')}8"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bN.png", Position = $"{(char)(positions[1] + 'A')}8", Type = TypesFigures.Knight,  Side = SideColor.Black };
@@ -79,9 +84,22 @@ namespace Chess.Controls
             Cells[$"{(char)(positions[5] + 'A')}8"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bB.png", Position = $"{(char)(positions[5] + 'A')}8", Type = TypesFigures.Bishop,  Side = SideColor.Black };
             Cells[$"{(char)(positions[6] + 'A')}8"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bN.png", Position = $"{(char)(positions[6] + 'A')}8", Type = TypesFigures.Knight,  Side = SideColor.Black };
             Cells[$"{(char)(positions[7] + 'A')}8"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bR.png", Position = $"{(char)(positions[7] + 'A')}8", Type = TypesFigures.Rook,    Side = SideColor.Black };
+            for (int i = 0; i < positions.Count; ++i) AllFigures.Add(Cells[$"{(char)(positions[i] + 'A')}8"].ChildFigure);
 
             WhiteKing = Cells[$"{(char)(positions[4] + 'A')}1"].ChildFigure;
             BlackKing = Cells[$"{(char)(positions[4] + 'A')}8"].ChildFigure;
+            AllFigures.Add(WhiteKing);
+            AllFigures.Add(BlackKing);
+        }
+
+        public void ClearConditions()
+        {
+            for (int i = 0; i < AllFigures.Count; ++i)
+            {
+                AllFigures[i].AttackingFigures.Clear();
+                AllFigures[i].PossibleMoves.Clear();
+                AllFigures[i].CanMove = true;
+            }
         }
 
 

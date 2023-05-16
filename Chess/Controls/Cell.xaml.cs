@@ -33,10 +33,17 @@ namespace Chess.Controls
             set
             {
                 if (_childFigure == value) return;
-                CellGrid.Children.Remove(_childFigure);
+                if (_childFigure != null) CellGrid.Children.Remove(_childFigure);
                 _childFigure = value;
                 CellGrid.Children.Add(_childFigure);
             }
+        }
+
+        public void RemoveFigure()
+        {
+            if (_childFigure == null) return;
+            CellGrid.Children.Remove(_childFigure);
+            _childFigure = null;
         }
 
 
