@@ -31,6 +31,7 @@ namespace Chess.Controls
 
         public Figure WhiteKing { get; private set; }
         public Figure BlackKing { get; private set; }
+        public Figure PreviousFigure { get; set; }
         public List<Figure> AllFigures { get; private set; } = new List<Figure>();
         
 

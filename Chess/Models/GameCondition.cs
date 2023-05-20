@@ -50,6 +50,7 @@ namespace Chess.Models
 				Algorithms.UpdateConditionFigures();
 				if (CurrentStep == SideColor.White) CurrentStep = SideColor.Black;
 				else CurrentStep = SideColor.White;
+				App.Desk.PreviousFigure = SelectedFigure;
 			}
 		}
 	}

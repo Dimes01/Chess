@@ -151,19 +151,36 @@ namespace Chess.Models
 				if (figure.CountMoves == 0 && CheckCell(a, b, out outDesk, out isEnemy, out isFriend))
 					possibleMoves.Add(Str(a, b));
 				a = position[0] + 1; b = position[1] + 1 * side;
+				int c;
+				if (side == 1) c = b - 1;
+				else c = b + 1;
 				if (
 					(CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy)
-					||(
-					CheckCell(a, b - 1, out outDesk, out isEnemy, out isFriend) && isEnemy 
-					&& App.Desk.Cells[Str(a, b - 1)].ChildFigure.Side != figure.Side && App.Desk.Cells[Str(a, b - 1)].ChildFigure.Type is TypesFigures.Pawn 
-					&& App.Desk.Cells[Str(a, b - 1)].ChildFigure.CountMoves == 1 
-					&& ((figure.Position[1] == '4' && side == -1) || (figure.Position[1] == '5' && side == 1))
+					|| (
+						CheckCell(a, c, out outDesk, out isEnemy, out isFriend) 
+						&& isEnemy 
+						&& App.Desk.PreviousFigure != null
+						&& App.Desk.PreviousFigure == App.Desk.Cells[Str(a, c)].ChildFigure
+						&& App.Desk.PreviousFigure.Side != figure.Side 
+						&& App.Desk.PreviousFigure.Type is TypesFigures.Pawn 
+						&& App.Desk.PreviousFigure.CountMoves == 1 
+						&& ((figure.Position[1] == '4' && side == -1) || (figure.Position[1] == '5' && side == 1))
 					)
 					) possibleMoves.Add(Str(a, b));
 				a = position[0] - 1;
-				if ((CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) 
-					|| (CheckCell(a, b - 1, out outDesk, out isEnemy, out isFriend) && isEnemy && App.Desk.Cells[Str(a, b - 1)].ChildFigure.Side != figure.Side && App.Desk.Cells[Str(a, b - 1)].ChildFigure.Type is TypesFigures.Pawn && App.Desk.Cells[Str(a, b - 1)].ChildFigure.CountMoves == 1 && ((figure.Position[1] == '4' && side == -1) || (figure.Position[1] == '5' && side == 1)))) possibleMoves.Add(Str(a, b));
-
+				if (
+					(CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) 
+					|| (
+						CheckCell(a, c, out outDesk, out isEnemy, out isFriend)
+						&& isEnemy
+                        && App.Desk.PreviousFigure != null
+                        && App.Desk.PreviousFigure == App.Desk.Cells[Str(a, c)].ChildFigure
+                        && App.Desk.PreviousFigure.Side != figure.Side 
+						&& App.Desk.PreviousFigure.Type is TypesFigures.Pawn 
+						&& App.Desk.PreviousFigure.CountMoves == 1 
+						&& ((figure.Position[1] == '4' && side == -1) || (figure.Position[1] == '5' && side == 1))
+					)
+					) possibleMoves.Add(Str(a, b));
 			}
 
 		}
