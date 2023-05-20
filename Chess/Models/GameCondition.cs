@@ -9,6 +9,7 @@ namespace Chess.Models
 {
 	public class GameCondition
 	{
+		public bool IsAtacked = false;
 		public SideColor CurrentStep { get; private set; } = SideColor.White;
 		public Cell SelectedCell { get; private set; } = new Cell();
 		public Cell CellWithSelectedFigure { get; private set; }
@@ -21,7 +22,7 @@ namespace Chess.Models
 		/// </summary>
 		public void ChangeSelectedCell(Cell cell)
 		{
-			if (cell.ChildFigure != null) CellWithSelectedFigure = cell;
+			if (cell.ChildFigure != null && cell.ChildFigure.Side == CurrentStep) CellWithSelectedFigure = cell;
 			SelectedCell = cell;
 			MakeMove();
 			App.Desk.MarkedCells = new List<string>();
@@ -45,6 +46,11 @@ namespace Chess.Models
 				App.Desk.ClearConditions();
 				CellWithSelectedFigure.RemoveFigure();
 				SelectedFigure.Position = SelectedCell.Position;
+				if (SelectedCell.ChildFigure != null)
+				{
+					SelectedCell.RemoveFigure();
+                    IsAtacked = true;
+                }
 				SelectedCell.ChildFigure = SelectedFigure;
 				// После того, как ход сделан, обновляем состояния всех фигур. Ищем шахи, маты и прочую хуйню
 				Algorithms.UpdateConditionFigures();

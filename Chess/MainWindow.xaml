@@ -7,9 +7,100 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="1080" Width="1920" WindowState="Maximized"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
-    <Grid Name="MainGrid" Background="DimGray">
-        <fig:Desk x:Name="MainDesk" 
-                  Height="{Binding ElementName=MainGrid, Path=ActualHeight}"
+    <Window.Resources>
+        <Style x:Key="PositionTextStyle" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Foreground" Value="AntiqueWhite"/>
+            <Setter Property="Margin" Value="10,0"/>
+        </Style>
+    </Window.Resources>
+    <Grid Name="GridHui" Background="DimGray">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="{Binding ElementName=GridHui, Path=ActualHeight}"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid Name="MainGrid" Grid.Column="1">
+            <fig:Desk x:Name="MainDesk"
+                  Height="{Binding ElementName=MainGrid, Path=Height}"
                   WhiteBrush="AntiqueWhite" BlackBrush="BurlyWood"/>
+        </Grid>
+        <Grid Grid.Column="1" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="A" TextAlignment="Center" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Column="0"/>
+            <TextBlock Text="B" TextAlignment="Center" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Column="1"/>
+            <TextBlock Text="C" TextAlignment="Center" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Column="2"/>
+            <TextBlock Text="D" TextAlignment="Center" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Column="3"/>
+            <TextBlock Text="E" TextAlignment="Center" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Column="4"/>
+            <TextBlock Text="F" TextAlignment="Center" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Column="5"/>
+            <TextBlock Text="G" TextAlignment="Center" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Column="6"/>
+            <TextBlock Text="H" TextAlignment="Center" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Column="7"/>
+        </Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="8" TextAlignment="Right" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Row="0"/>
+            <TextBlock Text="7" TextAlignment="Right" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Row="1"/>
+            <TextBlock Text="6" TextAlignment="Right" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Row="2"/>
+            <TextBlock Text="5" TextAlignment="Right" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Row="3"/>
+            <TextBlock Text="4" TextAlignment="Right" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Row="4"/>
+            <TextBlock Text="3" TextAlignment="Right" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Row="5"/>
+            <TextBlock Text="2" TextAlignment="Right" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Row="6"/>
+            <TextBlock Text="1" TextAlignment="Right" 
+                       Style="{StaticResource PositionTextStyle}"
+                       Grid.Row="7"/>
+        </Grid>
     </Grid>
 </Window>

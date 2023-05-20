@@ -29,6 +29,7 @@ namespace Chess.Controls
         public bool CanMove { get; set; } = true;
         public int CountMoves { get; set; }
         public List<string> PossibleMoves { get; set; } = new List<string>();
+
         public List<Figure> AttackingFigures { get; set; } = new List<Figure>();
 
 
@@ -92,11 +93,12 @@ namespace Chess.Controls
 
         private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (Side == App.GameCondition.CurrentStep)
+            if (Side == App.GameCondition.CurrentStep && !App.GameCondition.IsAtacked)
             {
                 IsSelected = true;
                 App.GameCondition.ChangeSelectedFigure(this);
             }
+            App.GameCondition.IsAtacked = false;
         }
     }
 }
