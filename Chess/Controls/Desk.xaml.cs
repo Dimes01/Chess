@@ -100,7 +100,8 @@ namespace Chess.Controls
                 AllFigures[i].AttackingFigures.Clear();
                 AllFigures[i].PossibleMoves.Clear();
                 AllFigures[i].CanMove = true;
-            }
+				AllFigures[i].Bound = null;
+			}
         }
 
 

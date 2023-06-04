@@ -27,7 +27,8 @@ namespace Chess.Controls
         }
 
         public bool CanMove { get; set; } = true;
-        public int CountMoves { get; set; }
+		public Figure Bound { get; set; } = null;
+		public int CountMoves { get; set; }
         public List<string> PossibleMoves { get; set; } = new List<string>();
 
         public List<Figure> AttackingFigures { get; set; } = new List<Figure>();

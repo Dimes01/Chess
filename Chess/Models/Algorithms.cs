@@ -52,7 +52,7 @@ namespace Chess.Models
 		// outDesk = true означает, что клетка вне доски
 		// isEnemy = true означает, что на клетке вражеская фигура
 		// isFriend = true означает, что на клетке дружеская фигура
-		private static bool CheckCell(int pos0, int pos1, out bool outDesk, out bool isEnemy, out bool isFriend)
+		private static bool CheckCell(Figure figure, int pos0, int pos1, out bool outDesk, out bool isEnemy, out bool isFriend)
 		{
 			outDesk = false; isEnemy = false; isFriend = false;
 			if ((pos0 < 'A') || (pos0 > 'H') || (pos1 < '1') || (pos1 > '8'))
@@ -60,27 +60,27 @@ namespace Chess.Models
 				outDesk = true;
 				return false;
 			}
-			Figure figure = App.Desk.Cells[Str(pos0, pos1)].ChildFigure;
-			if (figure != null)
+			Figure ufigure = App.Desk.Cells[Str(pos0, pos1)].ChildFigure;
+			if (ufigure != null)
 			{
-				isEnemy = figure.Side != App.GameCondition.SelectedFigure.Side;
+				isEnemy = ufigure.Side != figure.Side;
 				isFriend = !isEnemy;
 			}
-			return (figure == null) || isEnemy;
+			return (ufigure == null) || isEnemy;
 		}
-		private static bool CheckCell(int pos0, int pos1)
+		private static bool CheckCell(Figure figure, int pos0, int pos1)
 		{
 			bool isEnemy = false;
 			if ((pos0 < 'A') || (pos0 > 'H') || (pos1 < '1') || (pos1 > '8'))
 			{
 				return false;
 			}
-			Figure figure = App.Desk.Cells[Str(pos0, pos1)].ChildFigure;
-			if (figure != null)
+			Figure ufigure = App.Desk.Cells[Str(pos0, pos1)].ChildFigure;
+			if (ufigure != null)
 			{
-				isEnemy = figure.Side != App.GameCondition.SelectedFigure.Side;
+				isEnemy = ufigure.Side != figure.Side;
 			}
-			return (figure == null) || isEnemy;
+			return (ufigure == null) || isEnemy;
 		}
 
 		// Используется для недопущения нахождения королей рядом друг с другом
@@ -101,7 +101,7 @@ namespace Chess.Models
 
 		// нейминг говно. Метод используется тогда, когда во время обновления состояний на проверяемой клетке оказалась вражеская фигура.
 		// метод добавляет информацию атакуемой фигуре о том, кто её атакует, и, если атакуемая фигура связана, то запрещает ей ходить
-		private static void CheckCondition(Figure figure, int countAtack, int a, int b, List<Figure> wasAtacked = null)
+		private static void CheckCondition(Figure figure, ref int countAtack, int a, int b, List<Figure> wasAtacked = null)
 		{
 			if(wasAtacked==null)
 			{
@@ -112,7 +112,7 @@ namespace Chess.Models
 			fig.AttackingFigures.Add(figure);
 			wasAtacked.Add(fig);
 			if (fig.Type == TypesFigures.King && countAtack == 2)
-				wasAtacked[0].CanMove = false;
+				wasAtacked[0].Bound = figure;
 		}
 
 		#region Подсчёт возможных ходов
@@ -144,96 +144,175 @@ namespace Chess.Models
 			if (figure.Side == SideColor.White) side = 1;
 			else side = -1;
 			int a = position[0], b = position[1] + 1 * side;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend))
+			if (figure.Bound == null)
 			{
-				if (!isEnemy && !isFriend) possibleMoves.Add(Str(a, b));
-				b = position[1] + 2 * side;
-				if (figure.CountMoves == 0 && CheckCell(a, b, out outDesk, out isEnemy, out isFriend))
-					possibleMoves.Add(Str(a, b));
-				a = position[0] + 1; b = position[1] + 1 * side;
-				int c;
-				if (side == 1) c = b - 1;
-				else c = b + 1;
-				if (
-					(CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy)
-					|| (
-						CheckCell(a, c, out outDesk, out isEnemy, out isFriend) 
-						&& isEnemy 
-						&& App.Desk.PreviousFigure != null
-						&& App.Desk.PreviousFigure == App.Desk.Cells[Str(a, c)].ChildFigure
-						&& App.Desk.PreviousFigure.Side != figure.Side 
-						&& App.Desk.PreviousFigure.Type is TypesFigures.Pawn 
-						&& App.Desk.PreviousFigure.CountMoves == 1 
-						&& ((figure.Position[1] == '4' && side == -1) || (figure.Position[1] == '5' && side == 1))
-					)
-					) possibleMoves.Add(Str(a, b));
-				a = position[0] - 1;
-				if (
-					(CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) 
-					|| (
-						CheckCell(a, c, out outDesk, out isEnemy, out isFriend)
-						&& isEnemy
-                        && App.Desk.PreviousFigure != null
-                        && App.Desk.PreviousFigure == App.Desk.Cells[Str(a, c)].ChildFigure
-                        && App.Desk.PreviousFigure.Side != figure.Side 
-						&& App.Desk.PreviousFigure.Type is TypesFigures.Pawn 
-						&& App.Desk.PreviousFigure.CountMoves == 1 
-						&& ((figure.Position[1] == '4' && side == -1) || (figure.Position[1] == '5' && side == 1))
-					)
-					) possibleMoves.Add(Str(a, b));
+				if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend))
+				{
+					if (!isEnemy && !isFriend) possibleMoves.Add(Str(a, b));
+					b = position[1] + 2 * side;
+					if (figure.CountMoves == 0 && CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend))
+						possibleMoves.Add(Str(a, b));
+					a = position[0] + 1; b = position[1] + 1 * side;
+					int c;
+					if (side == 1) c = b - 1;
+					else c = b + 1;
+					if (
+						(CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && isEnemy)
+						|| (
+							CheckCell(figure, a, c, out outDesk, out isEnemy, out isFriend)
+							&& isEnemy
+							&& App.Desk.PreviousFigure != null
+							&& App.Desk.PreviousFigure == App.Desk.Cells[Str(a, c)].ChildFigure
+							&& App.Desk.PreviousFigure.Side != figure.Side
+							&& App.Desk.PreviousFigure.Type is TypesFigures.Pawn
+							&& App.Desk.PreviousFigure.CountMoves == 1
+							&& ((figure.Position[1] == '4' && side == -1) || (figure.Position[1] == '5' && side == 1))
+						)
+						) possibleMoves.Add(Str(a, b));
+					a = position[0] - 1;
+					if (
+						(CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && isEnemy)
+						|| (
+							CheckCell(figure, a, c, out outDesk, out isEnemy, out isFriend)
+							&& isEnemy
+							&& App.Desk.PreviousFigure != null
+							&& App.Desk.PreviousFigure == App.Desk.Cells[Str(a, c)].ChildFigure
+							&& App.Desk.PreviousFigure.Side != figure.Side
+							&& App.Desk.PreviousFigure.Type is TypesFigures.Pawn
+							&& App.Desk.PreviousFigure.CountMoves == 1
+							&& ((figure.Position[1] == '4' && side == -1) || (figure.Position[1] == '5' && side == 1))
+						)
+						) possibleMoves.Add(Str(a, b));
+				}
 			}
-
+			else
+			{
+				if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend))
+				{
+					a = position[0] + 1; b = position[1] + 1 * side;
+					int c;
+					if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && isEnemy && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+						possibleMoves.Add(Str(a, b));
+					a = position[0] - 1;
+					if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && isEnemy && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+						possibleMoves.Add(Str(a, b));
+				}
+			}
 		}
 
 		private static void PossibleMovesKnight(Figure figure, List<string> possibleMoves)
 		{
-			string position = figure.Position;
-			int a = position[0] + 2, b = position[1] + 1;
-			if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+			if (figure.Bound == null)
+			{
+				string position = figure.Position;
+				int a = position[0] + 2, b = position[1] + 1;
+				if (CheckCell(figure, a, b)) possibleMoves.Add(Str(a, b));
 
-			a = position[0] + 1; b = position[1] + 2;
-			if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+				a = position[0] + 1; b = position[1] + 2;
+				if (CheckCell(figure, a, b)) possibleMoves.Add(Str(a, b));
 
-			a = position[0] - 1; b = position[1] + 2;
-			if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+				a = position[0] - 1; b = position[1] + 2;
+				if (CheckCell(figure, a, b)) possibleMoves.Add(Str(a, b));
 
-			a = position[0] - 2; b = position[1] + 1;
-			if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+				a = position[0] - 2; b = position[1] + 1;
+				if (CheckCell(figure, a, b)) possibleMoves.Add(Str(a, b));
 
-			a = position[0] - 2; b = position[1] - 1;
-			if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+				a = position[0] - 2; b = position[1] - 1;
+				if (CheckCell(figure, a, b)) possibleMoves.Add(Str(a, b));
 
-			a = position[0] - 1; b = position[1] - 2;
-			if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+				a = position[0] - 1; b = position[1] - 2;
+				if (CheckCell(figure, a, b)) possibleMoves.Add(Str(a, b));
 
-			a = position[0] + 1; b = position[1] - 2;
-			if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+				a = position[0] + 1; b = position[1] - 2;
+				if (CheckCell(figure, a, b)) possibleMoves.Add(Str(a, b));
 
-			a = position[0] + 2; b = position[1] - 1;
-			if (CheckCell(a, b)) possibleMoves.Add(Str(a, b));
+				a = position[0] + 2; b = position[1] - 1;
+				if (CheckCell(figure, a, b)) possibleMoves.Add(Str(a, b));
+			}
 		}
 
 		private static void PossibleMovesBishop(Figure figure, List<string> possibleMoves)
 		{
 			int a, b;
 			bool outDesk = false, isEnemy = false, isFriend = false;
+			bool boundremove=false;
 			string position = figure.Position;
 
 			// Перебор вправо вверх
-			for (a = position[0] + 1, b = position[1] + 1; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); ++a, ++b) possibleMoves.Add(Str(a, b));
-			if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
-
+			for (a = position[0] + 1, b = position[1] + 1; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); ++a, ++b)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (!outDesk && isEnemy) 
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+				boundremove = true;
+					possibleMoves.Add(Str(a, b));
+			}
+			if (figure.Bound != null)
+				if (boundremove)
+					return;
+				else
+					possibleMoves.Clear();
 			// Перебор влево вверх
-			for (a = position[0] - 1, b = position[1] + 1; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); --a, ++b) possibleMoves.Add(Str(a, b));
-			if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
+			for (a = position[0] - 1, b = position[1] + 1; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); --a, ++b)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (!outDesk && isEnemy)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+
+			if (figure.Bound != null)
+				if (boundremove)
+					return;
+				else
+					possibleMoves.Clear();
 
 			// Перебор Влево вниз
-			for (a = position[0] - 1, b = position[1] - 1; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); --a, --b) possibleMoves.Add(Str(a, b));
-			if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
+			for (a = position[0] - 1, b = position[1] - 1; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); --a, --b)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (!outDesk && isEnemy)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (figure.Bound != null)
+				if (boundremove)
+					return;
+				else
+					possibleMoves.Clear();
 
 			// Перебор вправо вниз
-			for (a = position[0] + 1, b = position[1] - 1; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); ++a, --b) possibleMoves.Add(Str(a, b));
-			if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
+			for (a = position[0] + 1, b = position[1] - 1; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); ++a, --b)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (!outDesk && isEnemy)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (figure.Bound != null)
+				if (boundremove)
+					return;
+				else
+					possibleMoves.Clear();
 		}
 
 		private static void PossibleMovesRook(Figure figure, List<string> possibleMoves)
@@ -241,22 +320,82 @@ namespace Chess.Models
 			int a, b;
 			bool outDesk = false, isEnemy = false, isFriend = false;
 			string position = figure.Position;
-
+			bool boundremove = false;
 			// Перебор вправо
-			for (a = position[0] + 1, b = position[1]; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); ++a) possibleMoves.Add(Str(a, b));
-			if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
+			for (a = position[0] + 1, b = position[1]; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); ++a)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (!outDesk && isEnemy)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (figure.Bound != null)
+				if (boundremove)
+					return;
+				else
+					possibleMoves.Clear();
 
 			// Перебор вверх
-			for (a = position[0], b = position[1] + 1; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); ++b) possibleMoves.Add(Str(a, b));
-			if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
+			for (a = position[0], b = position[1] + 1; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); ++b)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (!outDesk && isEnemy)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (figure.Bound != null)
+				if (boundremove)
+					return;
+				else
+					possibleMoves.Clear();
 
 			// Перебор влево
-			for (a = position[0] - 1, b = position[1]; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); --a) possibleMoves.Add(Str(a, b));
-			if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
+			for (a = position[0] - 1, b = position[1]; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); --a)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (!outDesk && isEnemy)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (figure.Bound != null)
+				if (boundremove)
+					return;
+				else
+					possibleMoves.Clear();
 
 			// Перебор вниз
-			for (a = position[0], b = position[1] - 1; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); --b) possibleMoves.Add(Str(a, b));
-			if (!outDesk && isEnemy) possibleMoves.Add(Str(a, b));
+			for (a = position[0], b = position[1] - 1; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && (!isEnemy && !isFriend); --b)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (!outDesk && isEnemy)
+			{
+				if (figure.Bound != null && App.Desk.Cells[Str(a, b)].ChildFigure == figure.Bound)
+					boundremove = true;
+				possibleMoves.Add(Str(a, b));
+			}
+			if (figure.Bound != null)
+				if (boundremove)
+					return;
+				else
+					possibleMoves.Clear();
 		}
 
 		private static void PossibleMovesQueen(Figure figure, List<string> possibleMoves)
@@ -271,28 +410,28 @@ namespace Chess.Models
 			string position = figure.Position;
 
 			a = position[0] + 1; b = position[1];
-			if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
+			if (CheckCell(figure, a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
 
 			a = position[0] + 1; b = position[1] + 1;
-			if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
+			if (CheckCell(figure, a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
 
 			a = position[0]; b = position[1] + 1;
-			if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
+			if (CheckCell(figure, a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
 
 			a = position[0] - 1; b = position[1] + 1;
-			if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
+			if (CheckCell(figure, a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
 
 			a = position[0] - 1; b = position[1];
-			if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
+			if (CheckCell(figure, a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
 
 			a = position[0] - 1; b = position[1] - 1;
-			if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
+			if (CheckCell(figure, a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
 
 			a = position[0]; b = position[1] - 1;
-			if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
+			if (CheckCell(figure, a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
 
 			a = position[0] + 1; b = position[1] - 1;
-			if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
+			if (CheckCell(figure, a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
 		}
 
 		#endregion
@@ -326,9 +465,9 @@ namespace Chess.Models
 			if (figure.Side == SideColor.White) side = 1;
 			else side = -1;
 			int a = figure.Position[0] + 1, b = figure.Position[1] + 1 * side;
-			if (CheckCell(a, b,	out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b,	out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 			a = figure.Position[0] - 1; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 		}
 
 		// Конь атакует любые клетки
@@ -336,28 +475,28 @@ namespace Chess.Models
 		{
 			bool outDesk = false, isEnemy = false, isFriend = false;
 			int a = figure.Position[0] + 2, b = figure.Position[1] + 1, countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0] + 1; b = figure.Position[1] + 2; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0] - 1; b = figure.Position[1] + 2; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0] - 2; b = figure.Position[1] + 1; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0] - 2; b = figure.Position[1] - 1; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0] - 1; b = figure.Position[1] - 2; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0] + 1; b = figure.Position[1] - 2; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0] + 2; b = figure.Position[1] - 1; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 		}
 
 
@@ -368,43 +507,49 @@ namespace Chess.Models
 			bool outDesk = false, isEnemy = false, isFriend = false;
 
 			// Логичнее добавить условие перебора до тех пор, пока countAtack <= 2
-			for (a = figure.Position[0] + 1, b = figure.Position[1] + 1; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend; ++a, ++b)
-				if (isEnemy) CheckCondition(figure, countAtack, a, b);
-			if (!outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			for (a = figure.Position[0] + 1, b = figure.Position[1] + 1; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !outDesk && !isFriend && countAtack < 2; ++a, ++b)
+				if (isEnemy) CheckCondition(figure, ref countAtack, a, b, wasAtacked);
+			wasAtacked.Clear();
 
 			countAtack = 0;
-			for (a = figure.Position[0] - 1, b = figure.Position[1] + 1; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend; --a, ++b) { }
-			if (!outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			for (a = figure.Position[0] + 1, b = figure.Position[1] - 1; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !outDesk && !isFriend && countAtack < 2; ++a, --b)
+				if (isEnemy) CheckCondition(figure, ref countAtack, a, b, wasAtacked);
+			wasAtacked.Clear();
 
 			countAtack = 0;
-			for (a = figure.Position[0] - 1, b = figure.Position[1] - 1; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend; --a, --b) { }
-			if (!outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			for (a = figure.Position[0] - 1, b = figure.Position[1] + 1; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !outDesk && !isFriend && countAtack < 2; --a, ++b)
+				if (isEnemy) CheckCondition(figure, ref countAtack, a, b, wasAtacked);
+			wasAtacked.Clear();
 
 			countAtack = 0;
-			for (a = figure.Position[0] + 1, b = figure.Position[1] - 1; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend; ++a, --b) { }
-			if (!outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			for (a = figure.Position[0] - 1, b = figure.Position[1] - 1; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !outDesk && !isFriend && countAtack < 2; --a, --b)
+				if (isEnemy) CheckCondition(figure, ref countAtack, a, b, wasAtacked);
 		}
 
 		private static void UpdateConditionsRook(Figure figure)
 		{
 			int a, b, countAtack = 0;
+			List<Figure> wasAtacked = new List<Figure>();
 			bool outDesk = false, isEnemy = false, isFriend = false;
 
 			// Логичнее добавить условие перебора до тех пор, пока countAtack <= 2
-			for (a = figure.Position[0] + 1, b = figure.Position[1]; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend; ++a) { }
-			if (!outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			for (a = figure.Position[0] + 1, b = figure.Position[1]; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !outDesk && !isFriend && countAtack < 2; ++a)
+				if (isEnemy) CheckCondition(figure, ref countAtack, a, b, wasAtacked);
+			wasAtacked.Clear();
 
 			countAtack = 0;
-			for (a = figure.Position[0], b = figure.Position[1] + 1; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend; ++b) { }
-			if (!outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			for (a = figure.Position[0] - 1, b = figure.Position[1]; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !outDesk && !isFriend && countAtack < 2; --a)
+				if (isEnemy) CheckCondition(figure, ref countAtack, a, b, wasAtacked);
+			wasAtacked.Clear();
 
 			countAtack = 0;
-			for (a = figure.Position[0] - 1, b = figure.Position[1]; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend; --a) { }
-			if (!outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			for (a = figure.Position[0], b = figure.Position[1] + 1; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !outDesk && !isFriend && countAtack < 2; ++b)
+				if (isEnemy) CheckCondition(figure, ref countAtack, a, b, wasAtacked);
+			wasAtacked.Clear();
 
 			countAtack = 0;
-			for (a = figure.Position[0], b = figure.Position[1] - 1; CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend; --b) { }
-			if (!outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			for (a = figure.Position[0], b = figure.Position[1] - 1; CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !outDesk && !isFriend && countAtack < 2; --b)
+				if (isEnemy) CheckCondition(figure, ref countAtack, a, b, wasAtacked);
 		}
 
 		private static void UpdateConditionsQueen(Figure figure)
@@ -418,28 +563,28 @@ namespace Chess.Models
 		{
 			bool outDesk = false, isEnemy = false, isFriend = false;
 			int a = figure.Position[0] + 1, b = figure.Position[1], countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0]; b = figure.Position[1] + 1; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0] - 1; b = figure.Position[1]; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0]; b = figure.Position[1] - 1; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0] + 1; b = figure.Position[1] + 1; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0] - 1; b = figure.Position[1] + 1; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0] - 1; b = figure.Position[1] - 1; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 
 			a = figure.Position[0] + 1; b = figure.Position[1] - 1; countAtack = 0;
-			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+			if (CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, ref countAtack, a, b);
 		}
 
 		#endregion
