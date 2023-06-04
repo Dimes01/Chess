@@ -90,7 +90,7 @@ namespace Chess.Models
 			if (figure == App.Desk.WhiteKing) conflictFigure = App.Desk.BlackKing;
 			else conflictFigure = App.Desk.WhiteKing;
 
-			return Math.Abs(conflictFigure.Position[0] - pos0) >= 2 && Math.Abs(conflictFigure.Position[1] - pos1) >= 2;
+			return Math.Abs(conflictFigure.Position[0] - pos0) >= 2 || Math.Abs(conflictFigure.Position[1] - pos1) >= 2;
 		}
 
 		// недописаная проверка на мат, которая, по идее, должна быть после обновления состояний всех фигур
@@ -270,7 +270,6 @@ namespace Chess.Models
 			int a, b;
 			string position = figure.Position;
 
-			// Поочередный перебор всех клеток
 			a = position[0] + 1; b = position[1];
 			if (CheckCell(a, b) && CheckConflictKings(figure, a, b)) possibleMoves.Add(Str(a, b));
 
@@ -417,7 +416,30 @@ namespace Chess.Models
 		// Недописано для короля. Нужен самый блять тупой перебор
 		private static void UpdateConditionsKing(Figure figure)
 		{
-			return;
+			bool outDesk = false, isEnemy = false, isFriend = false;
+			int a = figure.Position[0] + 1, b = figure.Position[1], countAtack = 0;
+			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+
+			a = figure.Position[0]; b = figure.Position[1] + 1; countAtack = 0;
+			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+
+			a = figure.Position[0] - 1; b = figure.Position[1]; countAtack = 0;
+			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+
+			a = figure.Position[0]; b = figure.Position[1] - 1; countAtack = 0;
+			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+
+			a = figure.Position[0] + 1; b = figure.Position[1] + 1; countAtack = 0;
+			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+
+			a = figure.Position[0] - 1; b = figure.Position[1] + 1; countAtack = 0;
+			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+
+			a = figure.Position[0] - 1; b = figure.Position[1] - 1; countAtack = 0;
+			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
+
+			a = figure.Position[0] + 1; b = figure.Position[1] - 1; countAtack = 0;
+			if (CheckCell(a, b, out outDesk, out isEnemy, out isFriend) && !isFriend && !outDesk && isEnemy) CheckCondition(figure, countAtack, a, b);
 		}
 
 		#endregion
