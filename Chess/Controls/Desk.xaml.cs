@@ -1,30 +1,50 @@
 ﻿using Chess.Models;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Threading.Tasks;
 
 namespace Chess.Controls
 {
 	/// <summary>
 	/// Логика взаимодействия для Desk.xaml
 	/// </summary>
-	public partial class Desk : UserControl
+	public partial class Desk : UserControl, INotifyPropertyChanged
 	{
 		public Desk()
 		{
 			InitializeComponent();
 			MakeDesk();
 			Restart();
-			
 		}
+		private string _currentTime1;
+		private string _currentTime2;
+		private DateTime _startTime;
+		private TimeSpan tspan1;
+		private TimeSpan tspan2;
+		private TimeSpan tspan3;
+		private TimeSpan tspan4;
+		private bool ft = false;
+		private bool st = false;
 		public Figure WhiteKing { get; private set; }
 		public Figure BlackKing { get; private set; }
 		public Figure PreviousFigure { get; set; }
 		public List<Figure> AllFigures { get; private set; }
 		public void Restart()
 		{
+			ft = false;
+			st = false;
+			tspan1 = new TimeSpan(0, 5, 0);
+			tspan2 = new TimeSpan(0, 5, 0);
+			tspan3 = new TimeSpan(0, 5, 0);
+			tspan4 = new TimeSpan(0, 5, 0);
+			CurrentTime1 = tspan1.ToString(@"hh\:mm\:ss");
+			CurrentTime2 = tspan2.ToString(@"hh\:mm\:ss");
 			AllFigures = new List<Figure>();
 			WhiteKing = null; BlackKing = null; PreviousFigure = null;
 			foreach (var cell in Cells)
@@ -88,7 +108,28 @@ namespace Chess.Controls
 			AllFigures.Add(WhiteKing);
 			AllFigures.Add(BlackKing);
 		}
-
+		private async void UpdateTime1()
+		{
+			if (ft)
+			{
+				tspan3 = (tspan1 - (DateTime.Now - _startTime));
+				CurrentTime1 = tspan3.ToString(@"hh\:mm\:ss");
+				await Task.Delay(40);
+				UpdateTime1();
+			}
+			else tspan1 = tspan3;
+		}
+		private async void UpdateTime2()
+		{
+			if (st)
+			{
+				tspan4 = (tspan2 - (DateTime.Now - _startTime));
+				CurrentTime2 = tspan4.ToString(@"hh\:mm\:ss");
+				await Task.Delay(40);
+				UpdateTime2();
+			}
+			else tspan2 = tspan4;
+		}
 		public void ClearConditions()
 		{
 			for (int i = 0; i < AllFigures.Count; ++i)
@@ -108,6 +149,16 @@ namespace Chess.Controls
 		}
 
 		public static readonly DependencyProperty CellsProperty = DependencyProperty.Register(nameof(Cells), typeof(Dictionary<string, Cell>), typeof(Desk));
+		public string CurrentTime1
+		{
+			get { return _currentTime1; }
+			set { _currentTime1 = value; OnPropertyChanged(nameof(CurrentTime1)); }
+		}
+		public string CurrentTime2
+		{
+			get { return _currentTime2; }
+			set { _currentTime2 = value; OnPropertyChanged(nameof(CurrentTime2)); }
+		}
 		public Dictionary<string, Cell> Cells
 		{
 			get { return (Dictionary<string, Cell>)GetValue(CellsProperty); }
@@ -165,8 +216,39 @@ namespace Chess.Controls
 			list = e.NewValue as List<string>;
 			for (int i = 0; i < list.Count; ++i) desk.Cells[list[i]].Marked = Visibility.Visible;
 		}
-
-
+		public void TimerSwitch()
+		{
+			_startTime = DateTime.Now;
+			if (!ft && !st)
+			{
+				ft = true;
+				UpdateTime1();
+			}
+			else
+			{
+				if (ft)
+				{
+					ft = false;
+					st = true;
+					UpdateTime2();
+				}
+				else
+				{
+					if (st)
+					{
+						ft = true;
+						st = false;
+						UpdateTime1();
+					}
+				}
+			}
+		}
+		public event PropertyChangedEventHandler PropertyChanged;
+		public void OnPropertyChanged([CallerMemberName] string prop = "")
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(prop));
+		}
 		private void DeskGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			App.GameCondition.SelectedCell.IsSelected = false;

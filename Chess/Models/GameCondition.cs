@@ -51,6 +51,7 @@ namespace Chess.Models
 					App.Desk.MakeQueen(SelectedFigure);
 				}
 				SelectedCell.ChildFigure = SelectedFigure;
+				App.Desk.TimerSwitch();
 				// После того, как ход сделан, обновляем состояния всех фигур. Ищем шахи, маты
 				Algorithms.UpdateConditionFigures();
 				if (CurrentStep == SideColor.White) CurrentStep = SideColor.Black;
