@@ -13,9 +13,15 @@ namespace Chess
 	public partial class App : Application
 	{
 		public static Desk Desk { get; set; }
-		public static GameCondition GameCondition { get; set; } = new GameCondition();
+		public static GameCondition GameCondition { get; private set; }
 		public static string PathStyleFigure { get; } = "glass";
 		public static string PathFolderFigure { get; } = "Images";
+		public static void Restart()
+		{
+			Desk = (App.Current.MainWindow as MainWindow).MainDesk;
+			Desk.Restart();
+			GameCondition = new GameCondition();
+		}
 	}
 
 	#region Перечисления

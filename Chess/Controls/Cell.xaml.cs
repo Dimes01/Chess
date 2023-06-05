@@ -25,7 +25,8 @@ namespace Chess.Controls
 				if (_childFigure == value) return;
 				if (_childFigure != null) CellGrid.Children.Remove(_childFigure);
 				_childFigure = value;
-				CellGrid.Children.Add(_childFigure);
+				if(_childFigure != null) 
+					CellGrid.Children.Add(_childFigure);
 			}
 		}
 

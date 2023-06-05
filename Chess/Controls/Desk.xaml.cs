@@ -16,16 +16,21 @@ namespace Chess.Controls
 		{
 			InitializeComponent();
 			MakeDesk();
-			MakeFigures();
+			Restart();
+			
 		}
-
-
 		public Figure WhiteKing { get; private set; }
 		public Figure BlackKing { get; private set; }
 		public Figure PreviousFigure { get; set; }
-		public List<Figure> AllFigures { get; private set; } = new List<Figure>();
-
-
+		public List<Figure> AllFigures { get; private set; }
+		public void Restart()
+		{
+			AllFigures = new List<Figure>();
+			WhiteKing = null; BlackKing = null; PreviousFigure = null;
+			foreach (var cell in Cells)
+				cell.Value.ChildFigure = null;
+			MakeFigures();
+		}
 		private void MakeDesk()
 		{
 			if (Cells == null) Cells = new Dictionary<string, Cell>();

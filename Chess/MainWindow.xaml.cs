@@ -10,7 +10,11 @@ namespace Chess
 		public MainWindow()
 		{
 			InitializeComponent();
-			App.Desk = MainDesk;
+			App.Restart();
+		}
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			App.Restart();
 		}
 	}
 }
