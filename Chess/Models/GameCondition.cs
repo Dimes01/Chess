@@ -1,9 +1,5 @@
 ﻿using Chess.Controls;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chess.Models
 {
@@ -48,11 +44,15 @@ namespace Chess.Models
 				SelectedFigure.Position = SelectedCell.Position;
 				if (SelectedCell.ChildFigure != null)
 				{
-					SelectedCell.RemoveFigure();
-                    IsAtacked = true;
-                }
+					IsAtacked = true;
+				}
+				if ((SelectedCell.Position[1] == '1' && SelectedFigure.Type == TypesFigures.Pawn) || (SelectedCell.Position[1] == '8' && SelectedFigure.Type == TypesFigures.Pawn))
+				{
+					App.Desk.MakeQueen(SelectedFigure);
+				}
 				SelectedCell.ChildFigure = SelectedFigure;
-				// После того, как ход сделан, обновляем состояния всех фигур. Ищем шахи, маты и прочую хуйню
+				
+				// После того, как ход сделан, обновляем состояния всех фигур. Ищем шахи, маты
 				Algorithms.UpdateConditionFigures();
 				if (CurrentStep == SideColor.White) CurrentStep = SideColor.Black;
 				else CurrentStep = SideColor.White;
