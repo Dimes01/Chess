@@ -112,24 +112,23 @@
                     Margin="10,75,0,0" 
                     Grid.RowSpan="2" 
                     FontWeight="Bold"/>
-            <TextBlock HorizontalAlignment="Left" 
-                       Margin="10,0,0,0" 
+            <TextBlock HorizontalAlignment="Left"
                        TextWrapping="Wrap" 
                        Text="{Binding CurrentTime1, ElementName=MainDesk}" 
                        VerticalAlignment="Center" 
-                       Height="110" Width="380" 
-                       FontSize="24" 
+                       Height="48" Width="380" 
+                       FontSize="36" 
                        FontWeight="Bold" 
-                       TextAlignment="Center"/>
+                       TextAlignment="Center" Margin="10,0,0,0"/>
             <TextBlock HorizontalAlignment="Left" 
                        Grid.Row="7" 
                        TextWrapping="Wrap" 
                        Text="{Binding CurrentTime2, ElementName=MainDesk}" 
                        VerticalAlignment="Center" 
-                       Height="109" Width="390" 
+                       Height="48" Width="380" 
                        FontWeight="Bold" 
-                       FontSize="24" 
-                       TextAlignment="Center"/>
+                       FontSize="36" 
+                       TextAlignment="Center" Margin="10,0,0,0"/>
         </Grid>
     </Grid>
 </Window>
