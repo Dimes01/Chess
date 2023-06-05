@@ -5,6 +5,7 @@ namespace Chess.Models
 {
 	public class GameCondition
 	{
+
 		public bool IsAtacked = false;
 		public SideColor CurrentStep { get; private set; } = SideColor.White;
 		public Cell SelectedCell { get; private set; } = new Cell();
