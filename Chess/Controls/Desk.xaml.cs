@@ -16,23 +16,29 @@ namespace Chess.Controls
 	/// </summary>
 	public partial class Desk : UserControl
 	{
+		public GameCondition GameCondition { get; private set; }
 		public Desk()
 		{
 			InitializeComponent();
 			MakeDesk();
 			Restart();
 		}
-		public Figure WhiteKing { get; private set; }
-		public Figure BlackKing { get; private set; }
+		public Dictionary<SideColor, Figure> Kings { get; private set; }
 		public Figure PreviousFigure { get; set; }
-		public List<Figure> AllFigures { get; private set; }
+		public List<Figure> AllFigures { get; private set; } = new List<Figure>();
+		public List<string> DefensiveMoves { get; set; }
 		public void Restart()
 		{
+			GameCondition = new GameCondition();
 			TimerRestart();
-			AllFigures = new List<Figure>();
-			WhiteKing = null; BlackKing = null; PreviousFigure = null;
+			AllFigures.Clear();
+			DefensiveMoves = null;
+			Kings = null; PreviousFigure = null;
+			MarkedCells = new List<string>();
 			foreach (var cell in Cells)
-				cell.Value.ChildFigure = null;
+			{
+				cell.Value.RemoveFigure();
+			}
 			MakeFigures();
 		}
 		private void MakeDesk()
@@ -87,10 +93,13 @@ namespace Chess.Controls
 			Cells[$"{(char)(positions[7] + 'A')}8"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bR.png", Position = $"{(char)(positions[7] + 'A')}8", Type = TypesFigures.Rook, Side = SideColor.Black };
 			for (int i = 0; i < positions.Count; ++i) AllFigures.Add(Cells[$"{(char)(positions[i] + 'A')}8"].ChildFigure);
 
-			WhiteKing = Cells[$"{(char)(positions[4] + 'A')}1"].ChildFigure;
-			BlackKing = Cells[$"{(char)(positions[4] + 'A')}8"].ChildFigure;
-			AllFigures.Add(WhiteKing);
-			AllFigures.Add(BlackKing);
+			Kings = new Dictionary<SideColor, Figure>
+			{
+				{ SideColor.White, Cells[$"{(char)(positions[4] + 'A')}1"].ChildFigure },
+				{ SideColor.Black, Cells[$"{(char)(positions[4] + 'A')}8"].ChildFigure }
+			};
+			AllFigures.Add(Kings[SideColor.White]);
+			AllFigures.Add(Kings[SideColor.Black]);
 		}
 		#region timer
 		private DateTime _startTime;
@@ -129,6 +138,10 @@ namespace Chess.Controls
 			{
 				tspan3 = (tspan1 - (DateTime.Now - _startTime));
 				CurrentTime1 = tspan3.ToString(@"hh\:mm\:ss");
+				if(tspan3.Hours==0 && tspan3.Minutes==0 && tspan3.Seconds==0)
+				{
+					Win(Algorithms.ColorSwitch(GameCondition.CurrentStep));
+				}
 				await Task.Delay(40);
 				UpdateTime1();
 			}
@@ -140,6 +153,10 @@ namespace Chess.Controls
 			{
 				tspan4 = (tspan2 - (DateTime.Now - _startTime));
 				CurrentTime2 = tspan4.ToString(@"hh\:mm\:ss");
+				if (tspan4.Hours == 0 && tspan4.Minutes == 0 && tspan4.Seconds == 0)
+				{
+					Win(Algorithms.ColorSwitch(GameCondition.CurrentStep));
+				}
 				await Task.Delay(40);
 				UpdateTime2();
 			}
@@ -175,11 +192,16 @@ namespace Chess.Controls
 		#endregion
 		public void ClearConditions()
 		{
+			DefensiveMoves=null;
 			for (int i = 0; i < AllFigures.Count; ++i)
 			{
-				AllFigures[i].AttackingFigures.Clear();
 				AllFigures[i].PossibleMoves.Clear();
 				AllFigures[i].Bound = null;
+			}
+			foreach(var key in Cells)
+			{
+				key.Value.AttackingFigures[SideColor.White].Clear();
+				key.Value.AttackingFigures[SideColor.Black].Clear();
 			}
 		}
 		public void MakeQueen(Figure selectedfigure)
@@ -189,6 +211,25 @@ namespace Chess.Controls
 				selectedfigure.ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wQ.png";
 			else
 				selectedfigure.ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bQ.png";
+		}
+		public void Win(SideColor wincolor)
+		{
+			GameCondition.CurrentStep = SideColor.None;
+			foreach(var figure in AllFigures) 
+			{
+				figure.CanMove = false;
+			}
+			ft = false;
+			st = false;
+			//текстблоки
+			if(wincolor == SideColor.White)
+			{
+
+			}
+			else
+			{
+
+			}
 		}
 
 		public static readonly DependencyProperty CellsProperty = DependencyProperty.Register(nameof(Cells), typeof(Dictionary<string, Cell>), typeof(Desk));
@@ -251,8 +292,8 @@ namespace Chess.Controls
 		}
 		private void DeskGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			App.GameCondition.SelectedCell.IsSelected = false;
-			App.GameCondition.SelectedFigure.IsSelected = false;
+			GameCondition.SelectedCell.IsSelected = false;
+			GameCondition.SelectedFigure.IsSelected = false;
 		}
 	}
 }

@@ -20,7 +20,6 @@ namespace Chess.Controls
 		public Figure Bound { get; set; } = null;
 		public int CountMoves { get; set; }
 		public List<string> PossibleMoves { get; set; } = new List<string>();
-		public List<Figure> AttackingFigures { get; set; } = new List<Figure>();
 
 		public static readonly DependencyProperty ImageSourceProperty = DependencyProperty.Register(nameof(ImageSource), typeof(string), typeof(Figure));
 		public string ImageSource
@@ -82,12 +81,12 @@ namespace Chess.Controls
 
 		private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (Side == App.GameCondition.CurrentStep && !App.GameCondition.IsAtacked)
+			if (Side == App.Desk.GameCondition.CurrentStep && !App.Desk.GameCondition.IsAtacked)
 			{
 				IsSelected = true;
-				App.GameCondition.ChangeSelectedFigure(this);
+				App.Desk.GameCondition.ChangeSelectedFigure(this);
 			}
-			App.GameCondition.IsAtacked = false;
+			App.Desk.GameCondition.IsAtacked = false;
 		}
 	}
 }

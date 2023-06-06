@@ -11,7 +11,7 @@ namespace Chess
 		public MainWindow()
 		{
 			InitializeComponent();
-			App.Restart();
+			App.Start();
 		}
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{

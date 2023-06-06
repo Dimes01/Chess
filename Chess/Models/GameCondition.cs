@@ -7,9 +7,9 @@ namespace Chess.Models
 	{
 
 		public bool IsAtacked = false;
-		public SideColor CurrentStep { get; private set; } = SideColor.White;
+		public SideColor CurrentStep { get; set; } = SideColor.White;
 		public Cell SelectedCell { get; private set; } = new Cell();
-		public Cell CellWithSelectedFigure { get; private set; }
+		private Cell CellWithSelectedFigure { get;  set; }
 		public Figure SelectedFigure { get; private set; } = new Figure();
 
 		/// <summary>
@@ -32,7 +32,6 @@ namespace Chess.Models
 			App.Desk.MarkedCells = new List<string>(SelectedFigure.PossibleMoves);
 		}
 
-		// ЕГОР, ВОТ ЗДЕСЬ ТВОЕ МЕСТО!!! Тут нужно прописывать логику!
 		private void MakeMove()
 		{
 			if (App.Desk.MarkedCells == null || App.Desk.MarkedCells.Count == 0) return;
@@ -55,9 +54,12 @@ namespace Chess.Models
 				App.Desk.TimerSwitch();
 				// После того, как ход сделан, обновляем состояния всех фигур. Ищем шахи, маты
 				Algorithms.UpdateConditionFigures();
-				if (CurrentStep == SideColor.White) CurrentStep = SideColor.Black;
-				else CurrentStep = SideColor.White;
+				CurrentStep = Algorithms.ColorSwitch(CurrentStep);
 				App.Desk.PreviousFigure = SelectedFigure;
+				if(Algorithms.CheckCheckmate())
+				{
+					App.Desk.Win(Algorithms.ColorSwitch(CurrentStep));
+				}
 			}
 		}
 	}

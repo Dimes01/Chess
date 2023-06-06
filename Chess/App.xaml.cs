@@ -13,14 +13,15 @@ namespace Chess
 	public partial class App : Application
 	{
 		public static Desk Desk { get; set; }
-		public static GameCondition GameCondition { get; private set; }
 		public static string PathStyleFigure { get; } = "glass";
 		public static string PathFolderFigure { get; } = "Images";
-		public static void Restart()
+		public static void Start()
 		{
 			Desk = (App.Current.MainWindow as MainWindow).MainDesk;
+		}
+		public static void Restart()
+		{
 			Desk.Restart();
-			GameCondition = new GameCondition();
 		}
 	}
 
@@ -28,7 +29,8 @@ namespace Chess
 	public enum SideColor
 	{
 		White,
-		Black
+		Black,
+		None
 	}
 
 	public enum TypesFigures

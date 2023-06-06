@@ -15,6 +15,11 @@ namespace Chess.Controls
 		{
 			InitializeComponent();
 		}
+		public Dictionary<SideColor,List<Figure>> AttackingFigures { get; private set; } = new Dictionary<SideColor, List<Figure>> 
+		{
+			{SideColor.White,new List<Figure>() },
+			{SideColor.Black,new List<Figure>() }
+		};
 
 		private Figure _childFigure;
 		public Figure ChildFigure
@@ -73,7 +78,7 @@ namespace Chess.Controls
 		private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			IsSelected = true;
-			App.GameCondition.ChangeSelectedCell(this);
+			App.Desk.GameCondition.ChangeSelectedCell(this);
 		}
 	}
 }
