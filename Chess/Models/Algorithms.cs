@@ -7,6 +7,7 @@ namespace Chess.Models
 {
 	internal static class Algorithms
 	{
+		// начальная растановка фигур
 		public static List<int> FisherRandom(List<string> strings)
 		{
 			List<string> list = new List<string>(strings);
@@ -91,7 +92,7 @@ namespace Chess.Models
 				return true;
 		}
 
-		// недописаная проверка на мат, которая, по идее, должна быть после обновления состояний всех фигур
+		// проверка на мат
 		public static bool CheckCheckmate()
 		{
 			Figure king = App.Desk.Kings[App.Desk.GameCondition.CurrentStep];
@@ -126,7 +127,7 @@ namespace Chess.Models
 			}
 			return false;
 		}
-
+		// поиск клеток, которые при шахе находятся между королём и атакающей фигурой
 		private static void FindProtectingCells()
 		{
 			Figure king = App.Desk.Kings[App.Desk.GameCondition.CurrentStep];
@@ -255,6 +256,7 @@ namespace Chess.Models
 				PossibleMoves.Clear();
 			}
 		}
+		// при шахе удаляет их списка возможных ходов фигуры все, что не являются защитными
 		private static void RemoveNonDefensivMoves(Figure figure)
 		{
 			if(App.Desk.DefensiveMoves == null) return;
@@ -267,6 +269,7 @@ namespace Chess.Models
 				}
 			}
 		}
+		// проверка на то, является ли фигура привязанной
 		private static void CheckCondition(Figure figure, ref int countAtack, int pos0, int pos1, List<Figure> wasAtacked)
 		{
 			countAtack += 1;
@@ -275,6 +278,7 @@ namespace Chess.Models
 			if (fig.Type == TypesFigures.King && countAtack == 2)
 				wasAtacked[0].Bound = figure;
 		}
+		// считаем сколько фигур атакуют клетку
 		private static void UpdateCellAttackingFigures(Figure figure, int pos0, int pos1)
 		{
 			App.Desk.Cells[Str(pos0, pos1)].AttackingFigures[figure.Side].Add(figure);
@@ -314,7 +318,7 @@ namespace Chess.Models
 					if (!isEnemy && !isFriend) 
 						figure.PossibleMoves.Add(Str(a, b));
 					b = position[1] + 2 * side;
-					if (figure.CountMoves == 0 && CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend))
+					if (figure.CountMoves == 0 && !isEnemy && !isFriend && CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend) && !isEnemy && !isFriend)
 						figure.PossibleMoves.Add(Str(a, b));
 					a = position[0] + 1; b = position[1] + 1 * side;
 					int c;

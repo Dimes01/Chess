@@ -13,7 +13,6 @@ namespace Chess.Models
 		public Figure SelectedFigure { get; private set; } = new Figure();
 
 		/// <summary>
-		/// ВНИМАНИЕ БЛЯТЬ!!!
 		/// СОБЫТИЕ клика мыши на доске ТУННЕЛЬНОЕ (НЕ ПУЗЫРЬКОВОЕ)
 		/// Сначала срабатывает обработчик на Desk, потом на Cell и только потом на конкретной Figure
 		/// </summary>
@@ -38,24 +37,29 @@ namespace Chess.Models
 			if (App.Desk.MarkedCells.Contains(SelectedCell.Position))
 			{
 				SelectedFigure.CountMoves++;
-				// Сначала чистим состояния всех фигур. Это нужно на случай атаки на короля с нескольких сторон
+				// Сначала чистим состояния всех фигур
 				App.Desk.ClearConditions();
 				CellWithSelectedFigure.RemoveFigure();
 				SelectedFigure.Position = SelectedCell.Position;
 				if (SelectedCell.ChildFigure != null)
 				{
+					SelectedCell.RemoveFigure();
 					IsAtacked = true;
 				}
+				// если пешка дошла до края доски, меняем её на ферзя
 				if ((SelectedCell.Position[1] == '1' && SelectedFigure.Type == TypesFigures.Pawn) || (SelectedCell.Position[1] == '8' && SelectedFigure.Type == TypesFigures.Pawn))
 				{
-					App.Desk.MakeQueen(SelectedFigure);
+					App.Desk.MakeQueen();
 				}
 				SelectedCell.ChildFigure = SelectedFigure;
-				App.Desk.TimerSwitch();
-				// После того, как ход сделан, обновляем состояния всех фигур. Ищем шахи, маты
+				
+				// После того, как ход сделан, обновляем состояния всех фигур.
 				Algorithms.UpdateConditionFigures();
+				// меняем сторону
+				App.Desk.TimerSwitch();
 				CurrentStep = Algorithms.ColorSwitch(CurrentStep);
 				App.Desk.PreviousFigure = SelectedFigure;
+				// Ищем шахи, маты
 				if(Algorithms.CheckCheckmate())
 				{
 					App.Desk.Win(Algorithms.ColorSwitch(CurrentStep));

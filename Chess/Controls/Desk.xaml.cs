@@ -31,6 +31,7 @@ namespace Chess.Controls
 		{
 			GameCondition = new GameCondition();
 			TimerRestart();
+			WinRestart();
 			AllFigures.Clear();
 			DefensiveMoves = null;
 			Kings = null; PreviousFigure = null;
@@ -101,95 +102,7 @@ namespace Chess.Controls
 			AllFigures.Add(Kings[SideColor.White]);
 			AllFigures.Add(Kings[SideColor.Black]);
 		}
-		#region timer
-		private DateTime _startTime;
-		private TimeSpan tspan1;
-		private TimeSpan tspan2;
-		private TimeSpan tspan3;
-		private TimeSpan tspan4;
-		private bool ft = false;
-		private bool st = false;
-		private void TimerRestart()
-		{
-			ft = false;
-			st = false;
-			tspan1 = new TimeSpan(0, 5, 0);
-			tspan2 = new TimeSpan(0, 5, 0);
-			tspan3 = new TimeSpan(0, 5, 0);
-			tspan4 = new TimeSpan(0, 5, 0);
-			CurrentTime1 = tspan1.ToString(@"hh\:mm\:ss");
-			CurrentTime2 = tspan2.ToString(@"hh\:mm\:ss");
-		}
-		public static readonly DependencyProperty _currentTime1 = DependencyProperty.Register(nameof(CurrentTime1), typeof(string), typeof(Desk));
-		public string CurrentTime1
-		{
-			get { return (string)GetValue(_currentTime1); }
-			set { SetValue(_currentTime1, value); }
-		}
-		public static readonly DependencyProperty _currentTime2 = DependencyProperty.Register(nameof(CurrentTime2), typeof(string), typeof(Desk));
-		public string CurrentTime2
-		{
-			get { return (string)GetValue(_currentTime2); }
-			set { SetValue(_currentTime2, value); }
-		}
-		private async void UpdateTime1()
-		{
-			if (ft)
-			{
-				tspan3 = (tspan1 - (DateTime.Now - _startTime));
-				CurrentTime1 = tspan3.ToString(@"hh\:mm\:ss");
-				if(tspan3.Hours==0 && tspan3.Minutes==0 && tspan3.Seconds==0)
-				{
-					Win(Algorithms.ColorSwitch(GameCondition.CurrentStep));
-				}
-				await Task.Delay(40);
-				UpdateTime1();
-			}
-			else tspan1 = tspan3;
-		}
-		private async void UpdateTime2()
-		{
-			if (st)
-			{
-				tspan4 = (tspan2 - (DateTime.Now - _startTime));
-				CurrentTime2 = tspan4.ToString(@"hh\:mm\:ss");
-				if (tspan4.Hours == 0 && tspan4.Minutes == 0 && tspan4.Seconds == 0)
-				{
-					Win(Algorithms.ColorSwitch(GameCondition.CurrentStep));
-				}
-				await Task.Delay(40);
-				UpdateTime2();
-			}
-			else tspan2 = tspan4;
-		}
-		public void TimerSwitch()
-		{
-			_startTime = DateTime.Now;
-			if (!ft && !st)
-			{
-				ft = true;
-				UpdateTime1();
-			}
-			else
-			{
-				if (ft)
-				{
-					ft = false;
-					st = true;
-					UpdateTime2();
-				}
-				else
-				{
-					if (st)
-					{
-						ft = true;
-						st = false;
-						UpdateTime1();
-					}
-				}
-			}
-		}
-		#endregion
+		
 		public void ClearConditions()
 		{
 			DefensiveMoves=null;
@@ -204,34 +117,14 @@ namespace Chess.Controls
 				key.Value.AttackingFigures[SideColor.Black].Clear();
 			}
 		}
-		public void MakeQueen(Figure selectedfigure)
+		public void MakeQueen()
 		{
-			selectedfigure.Type = TypesFigures.Queen;
-			if(selectedfigure.Side == SideColor.White)
-				selectedfigure.ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wQ.png";
+			GameCondition.SelectedFigure.Type = TypesFigures.Queen;
+			if(GameCondition.SelectedFigure.Side == SideColor.White)
+				GameCondition.SelectedFigure.ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wQ.png";
 			else
-				selectedfigure.ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bQ.png";
+				GameCondition.SelectedFigure.ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bQ.png";
 		}
-		public void Win(SideColor wincolor)
-		{
-			GameCondition.CurrentStep = SideColor.None;
-			foreach(var figure in AllFigures) 
-			{
-				figure.CanMove = false;
-			}
-			ft = false;
-			st = false;
-			//текстблоки
-			if(wincolor == SideColor.White)
-			{
-
-			}
-			else
-			{
-
-			}
-		}
-
 		public static readonly DependencyProperty CellsProperty = DependencyProperty.Register(nameof(Cells), typeof(Dictionary<string, Cell>), typeof(Desk));
 		
 		public Dictionary<string, Cell> Cells
@@ -295,5 +188,152 @@ namespace Chess.Controls
 			GameCondition.SelectedCell.IsSelected = false;
 			GameCondition.SelectedFigure.IsSelected = false;
 		}
+		#region timer
+		private DateTime _startTime;
+		private TimeSpan tspan1;
+		private TimeSpan tspan2;
+		private TimeSpan tspan3;
+		private TimeSpan tspan4;
+		private bool ft = false;
+		private bool st = false;
+		private void TimerRestart()
+		{
+			ft = false;
+			st = false;
+			tspan1 = new TimeSpan(0, 5, 0);
+			tspan2 = new TimeSpan(0, 5, 0);
+			tspan3 = new TimeSpan(0, 5, 0);
+			tspan4 = new TimeSpan(0, 5, 0);
+			CurrentTime1 = tspan1.ToString(@"hh\:mm\:ss");
+			CurrentTime2 = tspan2.ToString(@"hh\:mm\:ss");
+		}
+		private static readonly DependencyProperty _currentTime1 = DependencyProperty.Register(nameof(CurrentTime1), typeof(string), typeof(Desk));
+		public string CurrentTime1
+		{
+			get { return (string)GetValue(_currentTime1); }
+			private set { SetValue(_currentTime1, value); }
+		}
+		private static readonly DependencyProperty _currentTime2 = DependencyProperty.Register(nameof(CurrentTime2), typeof(string), typeof(Desk));
+		public string CurrentTime2
+		{
+			get { return (string)GetValue(_currentTime2); }
+			private set { SetValue(_currentTime2, value); }
+		}
+		private async void UpdateTime1()
+		{
+			if (ft)
+			{
+				tspan3 = (tspan1 - (DateTime.Now - _startTime));
+				CurrentTime1 = tspan3.ToString(@"hh\:mm\:ss");
+				if (tspan3.Hours == 0 && tspan3.Minutes == 0 && tspan3.Seconds == 0)
+				{
+					Win(Algorithms.ColorSwitch(GameCondition.CurrentStep));
+				}
+				await Task.Delay(40);
+				UpdateTime1();
+			}
+			else tspan1 = tspan3;
+		}
+		private async void UpdateTime2()
+		{
+			if (st)
+			{
+				tspan4 = (tspan2 - (DateTime.Now - _startTime));
+				CurrentTime2 = tspan4.ToString(@"hh\:mm\:ss");
+				if (tspan4.Hours == 0 && tspan4.Minutes == 0 && tspan4.Seconds == 0)
+				{
+					Win(Algorithms.ColorSwitch(GameCondition.CurrentStep));
+				}
+				await Task.Delay(40);
+				UpdateTime2();
+			}
+			else tspan2 = tspan4;
+		}
+		public void TimerSwitch()
+		{
+			_startTime = DateTime.Now;
+			if (!ft && !st)
+			{
+				ft = true;
+				UpdateTime1();
+			}
+			else
+			{
+				if (ft)
+				{
+					ft = false;
+					st = true;
+					UpdateTime2();
+				}
+				else
+				{
+					if (st)
+					{
+						ft = true;
+						st = false;
+						UpdateTime1();
+					}
+				}
+			}
+		}
+		#endregion
+		#region победа
+		private static readonly DependencyProperty _textBlock1_Text = DependencyProperty.Register(nameof(TextBlock1_Text), typeof(string), typeof(Desk));
+		public string TextBlock1_Text
+		{
+			get { return (string)GetValue(_textBlock1_Text); }
+			private set { SetValue(_textBlock1_Text, value); }
+		}
+		private static readonly DependencyProperty _textBlock2_Text = DependencyProperty.Register(nameof(TextBlock2_Text), typeof(string), typeof(Desk));
+		public string TextBlock2_Text
+		{
+			get { return (string)GetValue(_textBlock2_Text); }
+			private set { SetValue(_textBlock2_Text, value); }
+		}
+		private static readonly DependencyProperty _textBlock1_Color = DependencyProperty.Register(nameof(TextBlock1_Color), typeof(string), typeof(Desk));
+		public string TextBlock1_Color
+		{
+			get { return (string)GetValue(_textBlock1_Color); }
+			private set { SetValue(_textBlock1_Color, value); }
+		}
+		private static readonly DependencyProperty _textBlock2_Color = DependencyProperty.Register(nameof(TextBlock2_Color), typeof(string), typeof(Desk));
+		public string TextBlock2_Color
+		{
+			get { return (string)GetValue(_textBlock2_Color); }
+			private set { SetValue(_textBlock2_Color, value); }
+		}
+		private void WinRestart()
+		{
+			TextBlock2_Text = null;
+			TextBlock2_Color = null;
+			TextBlock1_Text = null;
+			TextBlock1_Color = null;
+		}
+		public void Win(SideColor wincolor)
+		{
+			GameCondition.CurrentStep = SideColor.None;
+			foreach (var figure in AllFigures)
+			{
+				figure.CanMove = false;
+			}
+			ft = false;
+			st = false;
+			//текстблоки
+			if (wincolor == SideColor.White)
+			{
+				TextBlock2_Text = "Победа";
+				TextBlock2_Color = "#FF00E800";
+				TextBlock1_Text = "Поражение";
+				TextBlock1_Color = "#FFF50000";
+			}
+			else
+			{
+				TextBlock1_Text = "Победа";
+				TextBlock1_Color = "#FF00E800";
+				TextBlock2_Text = "Поражение";
+				TextBlock2_Color = "#FFF50000";
+			}
+		}
+		#endregion
 	}
 }
