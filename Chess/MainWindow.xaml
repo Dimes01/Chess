@@ -15,10 +15,10 @@
             <Setter Property="Margin" Value="10,0"/>
         </Style>
     </Window.Resources>
-    <Grid Name="GridHui" Background="DimGray">
+    <Grid Name="Grid1" Background="DimGray">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="{Binding ElementName=GridHui, Path=ActualHeight}"/>
+            <ColumnDefinition Width="{Binding ElementName=Grid1, Path=ActualHeight}"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -153,6 +153,10 @@
                        Grid.RowSpan="2" 
                        Grid.Row="6"/>
         </Grid>
-
+        <Grid Name="Grid2" Grid.Column="2">
+            <fig:RemovedFigures x:Name="MainRemoved"
+                  Height="{Binding ElementName=Grid2, Path=Height}"
+                  Width ="{Binding ElementName=Grid2, Path=Width}"/>
+        </Grid>
     </Grid>
 </Window>

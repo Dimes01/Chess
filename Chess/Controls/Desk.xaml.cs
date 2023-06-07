@@ -1,13 +1,11 @@
 ﻿using Chess.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Threading.Tasks;
 
 namespace Chess.Controls
 {
@@ -102,16 +100,16 @@ namespace Chess.Controls
 			AllFigures.Add(Kings[SideColor.White]);
 			AllFigures.Add(Kings[SideColor.Black]);
 		}
-		
+
 		public void ClearConditions()
 		{
-			DefensiveMoves=null;
+			DefensiveMoves = null;
 			for (int i = 0; i < AllFigures.Count; ++i)
 			{
 				AllFigures[i].PossibleMoves.Clear();
 				AllFigures[i].Bound = null;
 			}
-			foreach(var key in Cells)
+			foreach (var key in Cells)
 			{
 				key.Value.AttackingFigures[SideColor.White].Clear();
 				key.Value.AttackingFigures[SideColor.Black].Clear();
@@ -120,19 +118,19 @@ namespace Chess.Controls
 		public void MakeQueen()
 		{
 			GameCondition.SelectedFigure.Type = TypesFigures.Queen;
-			if(GameCondition.SelectedFigure.Side == SideColor.White)
+			if (GameCondition.SelectedFigure.Side == SideColor.White)
 				GameCondition.SelectedFigure.ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wQ.png";
 			else
 				GameCondition.SelectedFigure.ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bQ.png";
 		}
 		public static readonly DependencyProperty CellsProperty = DependencyProperty.Register(nameof(Cells), typeof(Dictionary<string, Cell>), typeof(Desk));
-		
+
 		public Dictionary<string, Cell> Cells
 		{
 			get { return (Dictionary<string, Cell>)GetValue(CellsProperty); }
 			set { SetValue(CellsProperty, value); }
 		}
-		
+
 		public static readonly DependencyProperty WhiteBrushProperty = DependencyProperty.Register(nameof(WhiteBrush), typeof(Brush), typeof(Desk),
 			new FrameworkPropertyMetadata(new PropertyChangedCallback(OnWhiteBrushChanged)));
 		public Brush WhiteBrush
@@ -311,10 +309,9 @@ namespace Chess.Controls
 		}
 		public void Win(SideColor wincolor)
 		{
-			GameCondition.CurrentStep = SideColor.None;
 			foreach (var figure in AllFigures)
 			{
-				figure.CanMove = false;
+				figure.CanSelected = false;
 			}
 			ft = false;
 			st = false;
@@ -328,10 +325,20 @@ namespace Chess.Controls
 			}
 			else
 			{
-				TextBlock1_Text = "Победа";
-				TextBlock1_Color = "#FF00E800";
-				TextBlock2_Text = "Поражение";
-				TextBlock2_Color = "#FFF50000";
+				if (wincolor == SideColor.Black)
+				{
+					TextBlock1_Text = "Победа";
+					TextBlock1_Color = "#FF00E800";
+					TextBlock2_Text = "Поражение";
+					TextBlock2_Color = "#FFF50000";
+				}
+				else
+				{
+					TextBlock1_Text = "Ничья";
+					TextBlock1_Color = "#FF00E800";
+					TextBlock2_Text = "Ничья";
+					TextBlock2_Color = "#FF00E800";
+				}
 			}
 		}
 		#endregion

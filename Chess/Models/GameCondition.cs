@@ -9,7 +9,7 @@ namespace Chess.Models
 		public bool IsAtacked = false;
 		public SideColor CurrentStep { get; set; } = SideColor.White;
 		public Cell SelectedCell { get; private set; } = new Cell();
-		private Cell CellWithSelectedFigure { get;  set; }
+		private Cell CellWithSelectedFigure { get; set; }
 		public Figure SelectedFigure { get; private set; } = new Figure();
 
 		/// <summary>
@@ -43,8 +43,8 @@ namespace Chess.Models
 				SelectedFigure.Position = SelectedCell.Position;
 				if (SelectedCell.ChildFigure != null)
 				{
-					SelectedCell.RemoveFigure();
 					IsAtacked = true;
+					SelectedCell.RemoveFigure(IsAtacked);
 				}
 				// если пешка дошла до края доски, меняем её на ферзя
 				if ((SelectedCell.Position[1] == '1' && SelectedFigure.Type == TypesFigures.Pawn) || (SelectedCell.Position[1] == '8' && SelectedFigure.Type == TypesFigures.Pawn))
@@ -52,7 +52,7 @@ namespace Chess.Models
 					App.Desk.MakeQueen();
 				}
 				SelectedCell.ChildFigure = SelectedFigure;
-				
+
 				// После того, как ход сделан, обновляем состояния всех фигур.
 				Algorithms.UpdateConditionFigures();
 				// меняем сторону
@@ -60,9 +60,15 @@ namespace Chess.Models
 				CurrentStep = Algorithms.ColorSwitch(CurrentStep);
 				App.Desk.PreviousFigure = SelectedFigure;
 				// Ищем шахи, маты
-				if(Algorithms.CheckCheckmate())
+				int ishod = Algorithms.CheckCheckmate();
+				if (ishod==1)
 				{
 					App.Desk.Win(Algorithms.ColorSwitch(CurrentStep));
+				}
+				else
+				{
+					if (ishod == 2)
+						App.Desk.Win(SideColor.None);
 				}
 			}
 		}

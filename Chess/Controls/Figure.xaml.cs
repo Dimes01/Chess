@@ -16,7 +16,7 @@ namespace Chess.Controls
 			InitializeComponent();
 		}
 
-		public bool CanMove { get; set; } = true;
+		public bool CanSelected { get; set; } = true;
 		public Figure Bound { get; set; } = null;
 		public int CountMoves { get; set; }
 		public List<string> PossibleMoves { get; set; } = new List<string>();
@@ -81,7 +81,7 @@ namespace Chess.Controls
 
 		private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (Side == App.Desk.GameCondition.CurrentStep && !App.Desk.GameCondition.IsAtacked)
+			if (Side == App.Desk.GameCondition.CurrentStep && !App.Desk.GameCondition.IsAtacked && CanSelected)
 			{
 				IsSelected = true;
 				App.Desk.GameCondition.ChangeSelectedFigure(this);

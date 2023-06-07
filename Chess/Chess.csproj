@@ -64,6 +64,9 @@
     <Compile Include="Controls\Figure.xaml.cs">
       <DependentUpon>Figure.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RemovedFigures.xaml.cs">
+      <DependentUpon>RemovedFigures.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\HalfLength.cs" />
     <Compile Include="Models\Algorithms.cs" />
     <Compile Include="Models\GameCondition.cs" />
@@ -77,6 +80,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Figure.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RemovedFigures.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

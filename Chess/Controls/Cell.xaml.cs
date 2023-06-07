@@ -1,8 +1,8 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Collections.Generic;
 
 namespace Chess.Controls
 {
@@ -15,7 +15,7 @@ namespace Chess.Controls
 		{
 			InitializeComponent();
 		}
-		public Dictionary<SideColor,List<Figure>> AttackingFigures { get; private set; } = new Dictionary<SideColor, List<Figure>> 
+		public Dictionary<SideColor, List<Figure>> AttackingFigures { get; private set; } = new Dictionary<SideColor, List<Figure>>
 		{
 			{SideColor.White,new List<Figure>() },
 			{SideColor.Black,new List<Figure>() }
@@ -30,15 +30,22 @@ namespace Chess.Controls
 				if (_childFigure == value) return;
 				if (_childFigure != null) CellGrid.Children.Remove(_childFigure);
 				_childFigure = value;
-				if(_childFigure != null) 
+				if (_childFigure != null)
 					CellGrid.Children.Add(_childFigure);
 			}
 		}
 
-		public void RemoveFigure()
+		public void RemoveFigure(bool isAttaced = false)
 		{
 			if (_childFigure == null) return;
+
+			Figure childFigure = _childFigure;
 			CellGrid.Children.Remove(_childFigure);
+			if (isAttaced)
+			{
+				App.Desk.AllFigures.Remove(childFigure);
+				App.RemovedFigures.AddRemoved(childFigure);
+			}
 			_childFigure = null;
 		}
 
