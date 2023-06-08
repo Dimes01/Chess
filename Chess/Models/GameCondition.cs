@@ -51,38 +51,7 @@ namespace Chess.Models
 			Algorithms.CalculatePossibleMoves(Desk.SelectedFigure);
 			Desk.MarkedCells = new List<string>(Desk.SelectedFigure.PossibleMoves);
 		}
-		private async void CheckTime()
-		{
-			if (Go)
-			{
-				if (Timer.White() == "00:00:00")
-				{
-					Timer.Stop();
-					Desk.CurrentTime1 = Timer.White();
-					Desk.Win(SideColor.White);
-				}
-				else
-				{
-					if (Timer.Black() == "00:00:00")
-					{
-						Timer.Stop();
-						Desk.CurrentTime2 = Timer.Black();
-						Desk.Win(SideColor.Black);
-					}
-					else
-					{
-						Desk.CurrentTime1 = Timer.White();
-						Desk.CurrentTime2 = Timer.Black();
-						await Task.Delay(30);
-						CheckTime();
-					}
-				}
-			}
-			else
-			{
-				Timer.Stop();
-			}
-		}
+
 		private void MakeMove()
 		{
 			if (Desk.MarkedCells == null || Desk.MarkedCells.Count == 0) return;
@@ -129,6 +98,38 @@ namespace Chess.Models
 				foreach (var f in Desk.AllFigures)
 					if (f.Side != Desk.CurrentStep)
 						f.CanSelected = false;
+			}
+		}
+		private async void CheckTime()
+		{
+			if (Go)
+			{
+				if (Timer.White() == "00:00:00")
+				{
+					Timer.Stop();
+					Desk.CurrentTime1 = Timer.White();
+					Desk.Win(SideColor.White);
+				}
+				else
+				{
+					if (Timer.Black() == "00:00:00")
+					{
+						Timer.Stop();
+						Desk.CurrentTime2 = Timer.Black();
+						Desk.Win(SideColor.Black);
+					}
+					else
+					{
+						Desk.CurrentTime1 = Timer.White();
+						Desk.CurrentTime2 = Timer.Black();
+						await Task.Delay(30);
+						CheckTime();
+					}
+				}
+			}
+			else
+			{
+				Timer.Stop();
 			}
 		}
 	}
