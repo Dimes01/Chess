@@ -642,10 +642,10 @@ namespace Chess.Models
 			else side = -1;
 			int a = figure.Position[0] + 1, b = figure.Position[1] + 1 * side;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 			a = figure.Position[0] - 1;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 		}
 
 		// Конь атакует любые клетки
@@ -654,35 +654,35 @@ namespace Chess.Models
 			bool outDesk = false, isEnemy = false, isFriend = false;
 			int a = figure.Position[0] + 2, b = figure.Position[1] + 1;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0] + 1; b = figure.Position[1] + 2;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0] - 1; b = figure.Position[1] + 2;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0] - 2; b = figure.Position[1] + 1;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0] - 2; b = figure.Position[1] - 1;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0] - 1; b = figure.Position[1] - 2;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0] + 1; b = figure.Position[1] - 2;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0] + 2; b = figure.Position[1] - 1;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 		}
 
 
@@ -779,35 +779,35 @@ namespace Chess.Models
 			bool outDesk = false, isEnemy = false, isFriend = false;
 			int a = figure.Position[0] + 1, b = figure.Position[1];
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0]; b = figure.Position[1] + 1;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0] - 1; b = figure.Position[1];
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0]; b = figure.Position[1] - 1;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0] + 1; b = figure.Position[1] + 1;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0] - 1; b = figure.Position[1] + 1;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0] - 1; b = figure.Position[1] - 1;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 
 			a = figure.Position[0] + 1; b = figure.Position[1] - 1;
 			CheckCell(figure, a, b, out outDesk, out isEnemy, out isFriend);
-			if (isEnemy || isFriend) UpdateCellAttackingFigures(figure, a, b);
+			if (isEnemy || isFriend || !outDesk) UpdateCellAttackingFigures(figure, a, b);
 		}
 
 		#endregion

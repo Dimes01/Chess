@@ -37,6 +37,11 @@ namespace Chess.Controls
 			DefensiveMoves = null;
 			Kings = null;
 			MarkedCells = new List<string>();
+			CurrentStep = SideColor.White;
+			SelectedCell = new Cell();
+			SelectedFigure = new Figure();
+			PreviousFigure = new Figure();
+			CellWithSelectedFigure = null;
 			foreach (var cell in Cells)
 			{
 				RemoveFigure(cell.Value);

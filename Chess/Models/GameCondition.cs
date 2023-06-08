@@ -24,9 +24,12 @@ namespace Chess.Models
 			Go = true;
 			Desk.Restart();
 			Timer.Restart();
+			Desk.CurrentTime1 = Timer.White();
+			Desk.CurrentTime2 = Timer.Black();
 			foreach (var f in Desk.AllFigures)
 				if (f.Side != Desk.CurrentStep)
 					f.CanSelected = false;
+			CheckTime();
 		}
 		/// <summary>
 		/// СОБЫТИЕ клика мыши на доске ТУННЕЛЬНОЕ (НЕ ПУЗЫРЬКОВОЕ)
@@ -53,6 +56,7 @@ namespace Chess.Models
 				if (Timer.White() == "00:00:00")
 				{
 					Timer.Stop();
+					Desk.CurrentTime1 = Timer.White();
 					Desk.Win(SideColor.White);
 				}
 				else
@@ -60,6 +64,7 @@ namespace Chess.Models
 					if (Timer.Black() == "00:00:00")
 					{
 						Timer.Stop();
+						Desk.CurrentTime2 = Timer.Black();
 						Desk.Win(SideColor.Black);
 					}
 					else
