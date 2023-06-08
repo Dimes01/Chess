@@ -7,7 +7,7 @@ namespace Chess.Models
 {
 	public class GameCondition : IRestart
 	{
-		private Timer Timer { get; set; } = new Timer();
+		private Timer Timer { get; set; }
 		private Desk Desk { get; set; }
 		public GameCondition(Desk d, RemovedFigures rf)
 		{
