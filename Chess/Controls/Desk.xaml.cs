@@ -69,7 +69,7 @@ namespace Chess.Controls
 				AllFigures.Add(Cells[$"{i}7"].ChildFigure);
 			}
 
-			// Люди
+			// Белые
 			List<int> positions = Algorithms.FisherRandom(new List<string> { "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1" });
 			Cells[$"{(char)(positions[0] + 'A')}1"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wR.png", Position = $"{(char)(positions[0] + 'A')}1", Type = TypesFigures.Rook, Side = SideColor.White };
 			Cells[$"{(char)(positions[1] + 'A')}1"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wN.png", Position = $"{(char)(positions[1] + 'A')}1", Type = TypesFigures.Knight, Side = SideColor.White };
@@ -81,7 +81,7 @@ namespace Chess.Controls
 			Cells[$"{(char)(positions[7] + 'A')}1"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wR.png", Position = $"{(char)(positions[7] + 'A')}1", Type = TypesFigures.Rook, Side = SideColor.White };
 			for (int i = 0; i < positions.Count; ++i) AllFigures.Add(Cells[$"{(char)(positions[i] + 'A')}1"].ChildFigure);
 
-			// Негры
+			// Чёрные
 			Cells[$"{(char)(positions[0] + 'A')}8"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bR.png", Position = $"{(char)(positions[0] + 'A')}8", Type = TypesFigures.Rook, Side = SideColor.Black };
 			Cells[$"{(char)(positions[1] + 'A')}8"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bN.png", Position = $"{(char)(positions[1] + 'A')}8", Type = TypesFigures.Knight, Side = SideColor.Black };
 			Cells[$"{(char)(positions[2] + 'A')}8"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bB.png", Position = $"{(char)(positions[2] + 'A')}8", Type = TypesFigures.Bishop, Side = SideColor.Black };
