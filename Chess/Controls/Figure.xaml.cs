@@ -81,12 +81,12 @@ namespace Chess.Controls
 
 		private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (Side == App.Desk.GameCondition.CurrentStep && !App.Desk.GameCondition.IsAtacked && CanSelected)
+			if (!App.GameCondition.IsAtacked && CanSelected)
 			{
 				IsSelected = true;
-				App.Desk.GameCondition.ChangeSelectedFigure(this);
+				App.GameCondition.ChangeSelectedFigure(this);
 			}
-			App.Desk.GameCondition.IsAtacked = false;
+			App.GameCondition.IsAtacked = false;
 		}
 	}
 }

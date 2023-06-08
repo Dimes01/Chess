@@ -35,17 +35,9 @@ namespace Chess.Controls
 			}
 		}
 
-		public void RemoveFigure(bool isAttaced = false)
+		public void RemoveFigure()
 		{
-			if (_childFigure == null) return;
-
-			Figure childFigure = _childFigure;
 			CellGrid.Children.Remove(_childFigure);
-			if (isAttaced)
-			{
-				App.Desk.AllFigures.Remove(childFigure);
-				App.RemovedFigures.AddRemoved(childFigure);
-			}
 			_childFigure = null;
 		}
 
@@ -80,12 +72,10 @@ namespace Chess.Controls
 			get { return (Visibility)GetValue(MarkedProperty); }
 			set { SetValue(MarkedProperty, value); }
 		}
-
-
 		private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			IsSelected = true;
-			App.Desk.GameCondition.ChangeSelectedCell(this);
+			App.GameCondition.ChangeSelectedCell(this);
 		}
 	}
 }

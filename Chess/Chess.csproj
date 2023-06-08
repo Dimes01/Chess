@@ -70,6 +70,7 @@
     <Compile Include="Converters\HalfLength.cs" />
     <Compile Include="Models\Algorithms.cs" />
     <Compile Include="Models\GameCondition.cs" />
+    <Compile Include="Models\Timer.cs" />
     <Compile Include="Utilities\RelayCommand.cs" />
     <Page Include="Controls\Cell.xaml">
       <SubType>Designer</SubType>

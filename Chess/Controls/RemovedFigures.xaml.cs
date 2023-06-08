@@ -45,7 +45,7 @@ namespace Chess.Controls
 				}
 			}
 		}
-		public void Clear()
+		public void Restart()
 		{
 			jW = 0; iW = 0; jB = 0; iB = 0;
 			WhiteGrid.Children.Clear();

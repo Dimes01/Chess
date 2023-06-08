@@ -1,4 +1,4 @@
-﻿using Chess.Controls;
+﻿using Chess.Models;
 using System.Windows;
 
 namespace Chess
@@ -11,19 +11,16 @@ namespace Chess
 	/// </summary>
 	public partial class App : Application
 	{
-		public static Desk Desk { get; set; }
-		public static RemovedFigures RemovedFigures { get; set; }
+		public static GameCondition GameCondition { get; private set; }
 		public static string PathStyleFigure { get; } = "glass";
 		public static string PathFolderFigure { get; } = "Images";
 		public static void Start()
 		{
-			Desk = (App.Current.MainWindow as MainWindow).MainDesk;
-			RemovedFigures = (App.Current.MainWindow as MainWindow).MainRemoved;
+			GameCondition = new GameCondition((App.Current.MainWindow as MainWindow).MainDesk, (App.Current.MainWindow as MainWindow).MainRemoved);
 		}
 		public static void Restart()
 		{
-			Desk.Restart();
-			RemovedFigures.Clear();
+			GameCondition.Restart();
 		}
 	}
 

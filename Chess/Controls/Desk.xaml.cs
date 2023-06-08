@@ -1,7 +1,5 @@
 ﻿using Chess.Models;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,7 +12,7 @@ namespace Chess.Controls
 	/// </summary>
 	public partial class Desk : UserControl
 	{
-		public GameCondition GameCondition { get; private set; }
+		private RemovedFigures RemovedFigures;
 		public Desk()
 		{
 			InitializeComponent();
@@ -22,23 +20,32 @@ namespace Chess.Controls
 			Restart();
 		}
 		public Dictionary<SideColor, Figure> Kings { get; private set; }
-		public Figure PreviousFigure { get; set; }
 		public List<Figure> AllFigures { get; private set; } = new List<Figure>();
 		public List<string> DefensiveMoves { get; set; }
+		public Cell SelectedCell { get; set; } = new Cell();
+		public Figure SelectedFigure { get; set; } = new Figure();
+		public SideColor CurrentStep { get; set; } = SideColor.White;
+		public Cell CellWithSelectedFigure { get; set; }
+		public Figure PreviousFigure { get; set; }
+
 		public void Restart()
 		{
-			GameCondition = new GameCondition();
-			TimerRestart();
 			WinRestart();
+			if (RemovedFigures != null)
+				RemovedFigures.Restart();
 			AllFigures.Clear();
 			DefensiveMoves = null;
-			Kings = null; PreviousFigure = null;
+			Kings = null;
 			MarkedCells = new List<string>();
 			foreach (var cell in Cells)
 			{
-				cell.Value.RemoveFigure();
+				RemoveFigure(cell.Value);
 			}
 			MakeFigures();
+		}
+		public void SetRemoved(RemovedFigures _removed)
+		{
+			RemovedFigures = _removed;
 		}
 		private void MakeDesk()
 		{
@@ -107,6 +114,7 @@ namespace Chess.Controls
 			for (int i = 0; i < AllFigures.Count; ++i)
 			{
 				AllFigures[i].PossibleMoves.Clear();
+				AllFigures[i].CanSelected = true;
 				AllFigures[i].Bound = null;
 			}
 			foreach (var key in Cells)
@@ -117,11 +125,22 @@ namespace Chess.Controls
 		}
 		public void MakeQueen()
 		{
-			GameCondition.SelectedFigure.Type = TypesFigures.Queen;
-			if (GameCondition.SelectedFigure.Side == SideColor.White)
-				GameCondition.SelectedFigure.ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wQ.png";
+			SelectedFigure.Type = TypesFigures.Queen;
+			if (SelectedFigure.Side == SideColor.White)
+				SelectedFigure.ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wQ.png";
 			else
-				GameCondition.SelectedFigure.ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bQ.png";
+				SelectedFigure.ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bQ.png";
+		}
+		public void RemoveFigure(Cell _cell, bool isAttaced = false)
+		{
+			if (_cell.ChildFigure == null) return;
+			Figure childFigure = _cell.ChildFigure;
+			_cell.RemoveFigure();
+			if (isAttaced)
+			{
+				AllFigures.Remove(childFigure);
+				RemovedFigures.AddRemoved(childFigure);
+			}
 		}
 		public static readonly DependencyProperty CellsProperty = DependencyProperty.Register(nameof(Cells), typeof(Dictionary<string, Cell>), typeof(Desk));
 
@@ -183,104 +202,27 @@ namespace Chess.Controls
 		}
 		private void DeskGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			GameCondition.SelectedCell.IsSelected = false;
-			GameCondition.SelectedFigure.IsSelected = false;
-		}
-		#region timer
-		private DateTime _startTime;
-		private TimeSpan tspan1;
-		private TimeSpan tspan2;
-		private TimeSpan tspan3;
-		private TimeSpan tspan4;
-		private bool ft = false;
-		private bool st = false;
-		private void TimerRestart()
-		{
-			ft = false;
-			st = false;
-			tspan1 = new TimeSpan(0, 5, 0);
-			tspan2 = new TimeSpan(0, 5, 0);
-			tspan3 = new TimeSpan(0, 5, 0);
-			tspan4 = new TimeSpan(0, 5, 0);
-			CurrentTime1 = tspan1.ToString(@"hh\:mm\:ss");
-			CurrentTime2 = tspan2.ToString(@"hh\:mm\:ss");
+			SelectedCell.IsSelected = false;
+			SelectedFigure.IsSelected = false;
 		}
 		private static readonly DependencyProperty _currentTime1 = DependencyProperty.Register(nameof(CurrentTime1), typeof(string), typeof(Desk));
 		public string CurrentTime1
 		{
 			get { return (string)GetValue(_currentTime1); }
-			private set { SetValue(_currentTime1, value); }
+			set { SetValue(_currentTime1, value); }
 		}
 		private static readonly DependencyProperty _currentTime2 = DependencyProperty.Register(nameof(CurrentTime2), typeof(string), typeof(Desk));
 		public string CurrentTime2
 		{
 			get { return (string)GetValue(_currentTime2); }
-			private set { SetValue(_currentTime2, value); }
+			set { SetValue(_currentTime2, value); }
 		}
-		private async void UpdateTime1()
-		{
-			if (ft)
-			{
-				tspan3 = (tspan1 - (DateTime.Now - _startTime));
-				CurrentTime1 = tspan3.ToString(@"hh\:mm\:ss");
-				if (tspan3.Hours == 0 && tspan3.Minutes == 0 && tspan3.Seconds == 0)
-				{
-					Win(Algorithms.ColorSwitch(GameCondition.CurrentStep));
-				}
-				await Task.Delay(40);
-				UpdateTime1();
-			}
-			else tspan1 = tspan3;
-		}
-		private async void UpdateTime2()
-		{
-			if (st)
-			{
-				tspan4 = (tspan2 - (DateTime.Now - _startTime));
-				CurrentTime2 = tspan4.ToString(@"hh\:mm\:ss");
-				if (tspan4.Hours == 0 && tspan4.Minutes == 0 && tspan4.Seconds == 0)
-				{
-					Win(Algorithms.ColorSwitch(GameCondition.CurrentStep));
-				}
-				await Task.Delay(40);
-				UpdateTime2();
-			}
-			else tspan2 = tspan4;
-		}
-		public void TimerSwitch()
-		{
-			_startTime = DateTime.Now;
-			if (!ft && !st)
-			{
-				ft = true;
-				UpdateTime1();
-			}
-			else
-			{
-				if (ft)
-				{
-					ft = false;
-					st = true;
-					UpdateTime2();
-				}
-				else
-				{
-					if (st)
-					{
-						ft = true;
-						st = false;
-						UpdateTime1();
-					}
-				}
-			}
-		}
-		#endregion
 		#region победа
 		private static readonly DependencyProperty _textBlock1_Text = DependencyProperty.Register(nameof(TextBlock1_Text), typeof(string), typeof(Desk));
 		public string TextBlock1_Text
 		{
 			get { return (string)GetValue(_textBlock1_Text); }
-			private set { SetValue(_textBlock1_Text, value); }
+			set { SetValue(_textBlock1_Text, value); }
 		}
 		private static readonly DependencyProperty _textBlock2_Text = DependencyProperty.Register(nameof(TextBlock2_Text), typeof(string), typeof(Desk));
 		public string TextBlock2_Text
@@ -313,8 +255,6 @@ namespace Chess.Controls
 			{
 				figure.CanSelected = false;
 			}
-			ft = false;
-			st = false;
 			//текстблоки
 			if (wincolor == SideColor.White)
 			{
