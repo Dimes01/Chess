@@ -19,10 +19,6 @@ namespace Chess
 		{
 			GameCondition = new GameCondition((App.Current.MainWindow as MainWindow).MainDesk, (App.Current.MainWindow as MainWindow).MainRemoved);
 		}
-		public static void Restart()
-		{
-			GameCondition.Restart();
-		}
 	}
 
 	#region Перечисления

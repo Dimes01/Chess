@@ -14,7 +14,7 @@ namespace Chess
 		}
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
-			App.Restart();
+			App.GameCondition.Restart();
 		}
 	}
 }

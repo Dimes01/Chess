@@ -7,6 +7,8 @@ namespace Chess.Models
 {
 	public class GameCondition : IRestart
 	{
+		private Timer Timer { get; set; } = new Timer();
+		private Desk Desk { get; set; }
 		public GameCondition(Desk d, RemovedFigures rf)
 		{
 			Desk = d;
@@ -16,10 +18,9 @@ namespace Chess.Models
 			Algorithms.SetData(Desk);
 			CheckTime();
 		}
-		private Timer Timer { get; set; } = new Timer();
+		
 		private bool Go = true;
 		public bool IsAtacked = false;
-		private Desk Desk { get; set; }
 		public void Restart()
 		{
 			Go = true;
