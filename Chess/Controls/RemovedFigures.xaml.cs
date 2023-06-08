@@ -1,11 +1,12 @@
-﻿using System.Windows.Controls;
+﻿using Chess.Utilities;
+using System.Windows.Controls;
 
 namespace Chess.Controls
 {
 	/// <summary>
 	/// Логика взаимодействия для RemovedFigures.xaml
 	/// </summary>
-	public partial class RemovedFigures : UserControl
+	public partial class RemovedFigures : UserControl, IRestart
 	{
 		private int iW = 0;
 		private int jW = 0;

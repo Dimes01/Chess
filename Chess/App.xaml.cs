@@ -1,4 +1,5 @@
 ﻿using Chess.Models;
+using Chess.Utilities;
 using System.Windows;
 
 namespace Chess

@@ -1,10 +1,11 @@
 ﻿using Chess.Controls;
+using Chess.Utilities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Chess.Models
 {
-	public class GameCondition
+	public class GameCondition : IRestart
 	{
 		public GameCondition(Desk d, RemovedFigures rf)
 		{

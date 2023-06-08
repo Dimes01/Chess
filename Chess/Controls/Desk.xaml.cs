@@ -1,4 +1,5 @@
 ﻿using Chess.Models;
+using Chess.Utilities;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,7 +11,7 @@ namespace Chess.Controls
 	/// <summary>
 	/// Логика взаимодействия для Desk.xaml
 	/// </summary>
-	public partial class Desk : UserControl
+	public partial class Desk : UserControl, IRestart
 	{
 		private RemovedFigures RemovedFigures;
 		public Desk()

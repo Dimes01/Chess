@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Chess.Utilities;
+using System;
 using System.Threading.Tasks;
 
 namespace Chess.Models
 {
-	public class Timer
+	public class Timer : IRestart
 	{
 		private DateTime _startTime;
 		private TimeSpan tspan1;
