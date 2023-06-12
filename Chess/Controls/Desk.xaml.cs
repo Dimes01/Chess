@@ -13,7 +13,6 @@ namespace Chess.Controls
 	/// </summary>
 	public partial class Desk : UserControl, IRestart
 	{
-		private RemovedFigures RemovedFigures;
 		public Desk()
 		{
 			InitializeComponent();
@@ -31,9 +30,6 @@ namespace Chess.Controls
 
 		public void Restart()
 		{
-			WinRestart();
-			if (RemovedFigures != null)
-				RemovedFigures.Restart();
 			AllFigures.Clear();
 			DefensiveMoves = null;
 			Kings = null;
@@ -48,10 +44,6 @@ namespace Chess.Controls
 				RemoveFigure(cell.Value);
 			}
 			MakeFigures();
-		}
-		public void SetRemoved(RemovedFigures _removed)
-		{
-			RemovedFigures = _removed;
 		}
 		private void MakeDesk()
 		{
@@ -137,16 +129,11 @@ namespace Chess.Controls
 			else
 				SelectedFigure.ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/bQ.png";
 		}
-		public void RemoveFigure(Cell _cell, bool isAttaced = false)
+		public void RemoveFigure(Cell _cell)
 		{
 			if (_cell.ChildFigure == null) return;
-			Figure childFigure = _cell.ChildFigure;
+			AllFigures.Remove(_cell.ChildFigure);
 			_cell.RemoveFigure();
-			if (isAttaced)
-			{
-				AllFigures.Remove(childFigure);
-				RemovedFigures.AddRemoved(childFigure);
-			}
 		}
 		public static readonly DependencyProperty CellsProperty = DependencyProperty.Register(nameof(Cells), typeof(Dictionary<string, Cell>), typeof(Desk));
 
@@ -211,82 +198,6 @@ namespace Chess.Controls
 			SelectedCell.IsSelected = false;
 			SelectedFigure.IsSelected = false;
 		}
-		private static readonly DependencyProperty _currentTime1 = DependencyProperty.Register(nameof(CurrentTime1), typeof(string), typeof(Desk));
-		public string CurrentTime1
-		{
-			get { return (string)GetValue(_currentTime1); }
-			set { SetValue(_currentTime1, value); }
-		}
-		private static readonly DependencyProperty _currentTime2 = DependencyProperty.Register(nameof(CurrentTime2), typeof(string), typeof(Desk));
-		public string CurrentTime2
-		{
-			get { return (string)GetValue(_currentTime2); }
-			set { SetValue(_currentTime2, value); }
-		}
-		#region победа
-		private static readonly DependencyProperty _textBlock1_Text = DependencyProperty.Register(nameof(TextBlock1_Text), typeof(string), typeof(Desk));
-		public string TextBlock1_Text
-		{
-			get { return (string)GetValue(_textBlock1_Text); }
-			set { SetValue(_textBlock1_Text, value); }
-		}
-		private static readonly DependencyProperty _textBlock2_Text = DependencyProperty.Register(nameof(TextBlock2_Text), typeof(string), typeof(Desk));
-		public string TextBlock2_Text
-		{
-			get { return (string)GetValue(_textBlock2_Text); }
-			private set { SetValue(_textBlock2_Text, value); }
-		}
-		private static readonly DependencyProperty _textBlock1_Color = DependencyProperty.Register(nameof(TextBlock1_Color), typeof(string), typeof(Desk));
-		public string TextBlock1_Color
-		{
-			get { return (string)GetValue(_textBlock1_Color); }
-			private set { SetValue(_textBlock1_Color, value); }
-		}
-		private static readonly DependencyProperty _textBlock2_Color = DependencyProperty.Register(nameof(TextBlock2_Color), typeof(string), typeof(Desk));
-		public string TextBlock2_Color
-		{
-			get { return (string)GetValue(_textBlock2_Color); }
-			private set { SetValue(_textBlock2_Color, value); }
-		}
-		private void WinRestart()
-		{
-			TextBlock2_Text = null;
-			TextBlock2_Color = null;
-			TextBlock1_Text = null;
-			TextBlock1_Color = null;
-		}
-		public void Win(SideColor wincolor)
-		{
-			foreach (var figure in AllFigures)
-			{
-				figure.CanSelected = false;
-			}
-			//текстблоки
-			if (wincolor == SideColor.White)
-			{
-				TextBlock2_Text = "Победа";
-				TextBlock2_Color = "#FF00E800";
-				TextBlock1_Text = "Поражение";
-				TextBlock1_Color = "#FFF50000";
-			}
-			else
-			{
-				if (wincolor == SideColor.Black)
-				{
-					TextBlock1_Text = "Победа";
-					TextBlock1_Color = "#FF00E800";
-					TextBlock2_Text = "Поражение";
-					TextBlock2_Color = "#FFF50000";
-				}
-				else
-				{
-					TextBlock1_Text = "Ничья";
-					TextBlock1_Color = "#FF00E800";
-					TextBlock2_Text = "Ничья";
-					TextBlock2_Color = "#FF00E800";
-				}
-			}
-		}
-		#endregion
+		
 	}
 }

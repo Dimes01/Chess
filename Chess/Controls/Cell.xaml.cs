@@ -75,7 +75,7 @@ namespace Chess.Controls
 		private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			IsSelected = true;
-			App.GameCondition.ChangeSelectedCell(this);
+			(App.Current.MainWindow as MainWindow).Game.ChangeSelectedCell(this);
 		}
 	}
 }
