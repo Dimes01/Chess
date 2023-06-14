@@ -16,7 +16,6 @@ namespace Chess
 	{
 		public static GameCondition GameCondition { get; set; }
 		public static Menu menu { get; set; }
-		public static Game game { get; set; }
 		public static string PathStyleFigure { get; } = "glass";
 		public static string PathFolderFigure { get; } = "Images";
 		public static List<TimeSpan> timeSpans { get; } = new List<TimeSpan> { new TimeSpan(0,1,0),new TimeSpan(0,5,0), new TimeSpan(0,30,0), new TimeSpan(1,0,0)};
