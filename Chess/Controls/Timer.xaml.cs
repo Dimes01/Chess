@@ -20,10 +20,12 @@ namespace Chess.Controls
 	/// </summary>
 	public partial class Timer : UserControl
 	{
-		public Timer()
+		public Timer(TimeSpan _time)
 		{
 			InitializeComponent();
+			time = _time;
 		}
+		private TimeSpan time;
 		private DateTime _startTime;
 		private TimeSpan tspan1;
 		private TimeSpan tspan2;
@@ -35,10 +37,10 @@ namespace Chess.Controls
 		{
 			ft = false;
 			st = false;
-			tspan1 = new TimeSpan(0, 5, 0);
-			tspan2 = new TimeSpan(0, 5, 0);
-			tspan3 = new TimeSpan(0, 5, 0);
-			tspan4 = new TimeSpan(0, 5, 0);
+			tspan1 = time;
+			tspan2 = time;
+			tspan3 = time;
+			tspan4 = time;
 			CurrentTime1 = tspan3.ToString(@"hh\:mm\:ss");
 			CurrentTime2 = tspan4.ToString(@"hh\:mm\:ss");
 		}

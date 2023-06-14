@@ -4,9 +4,6 @@
              xmlns:local="clr-namespace:Chess"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <!--<Style x:Key="ImageFigure" TargetType="Image">
-            <Setter Property="Margin" Value="10"/>
-        </Style>-->
         <SolidColorBrush x:Key="MarkCell" Color="Green"/>
     </Application.Resources>
 </Application>

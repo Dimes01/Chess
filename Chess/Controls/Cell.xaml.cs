@@ -15,7 +15,7 @@ namespace Chess.Controls
 		{
 			InitializeComponent();
 		}
-		public Dictionary<SideColor, List<Figure>> AttackingFigures { get; private set; } = new Dictionary<SideColor, List<Figure>>
+		public Dictionary<SideColor, List<Figure>> AttackingFigures { get; } = new Dictionary<SideColor, List<Figure>>
 		{
 			{SideColor.White,new List<Figure>() },
 			{SideColor.Black,new List<Figure>() }
@@ -42,7 +42,7 @@ namespace Chess.Controls
 		}
 
 
-		public static readonly DependencyProperty PositionProperty = DependencyProperty.Register(nameof(Position), typeof(string), typeof(Cell), new PropertyMetadata(""));
+		private static readonly DependencyProperty PositionProperty = DependencyProperty.Register(nameof(Position), typeof(string), typeof(Cell), new PropertyMetadata(""));
 		public string Position
 		{
 			get { return (string)GetValue(PositionProperty); }
@@ -50,7 +50,7 @@ namespace Chess.Controls
 		}
 
 
-		public static readonly DependencyProperty BackBrushProperty = DependencyProperty.Register(nameof(BackBrush), typeof(Brush), typeof(Cell));
+		private static readonly DependencyProperty BackBrushProperty = DependencyProperty.Register(nameof(BackBrush), typeof(Brush), typeof(Cell));
 		public Brush BackBrush
 		{
 			get { return (Brush)GetValue(BackBrushProperty); }
@@ -58,7 +58,7 @@ namespace Chess.Controls
 		}
 
 
-		public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(Cell));
+		private static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(Cell));
 		public bool IsSelected
 		{
 			get { return (bool)GetValue(IsSelectedProperty); }
@@ -66,7 +66,7 @@ namespace Chess.Controls
 		}
 
 
-		public static readonly DependencyProperty MarkedProperty = DependencyProperty.Register(nameof(Marked), typeof(Visibility), typeof(Cell), new FrameworkPropertyMetadata(Visibility.Collapsed));
+		private static readonly DependencyProperty MarkedProperty = DependencyProperty.Register(nameof(Marked), typeof(Visibility), typeof(Cell), new FrameworkPropertyMetadata(Visibility.Collapsed));
 		public Visibility Marked
 		{
 			get { return (Visibility)GetValue(MarkedProperty); }
@@ -75,7 +75,7 @@ namespace Chess.Controls
 		private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			IsSelected = true;
-			(App.Current.MainWindow as MainWindow).Game.ChangeSelectedCell(this);
+			App.GameCondition.ChangeSelectedCell(this);
 		}
 	}
 }

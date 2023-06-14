@@ -24,15 +24,15 @@ namespace Chess.Controls
 		private Timer timer { get; set; }
 		private Desk desk { get; set; }
 		private RemovedFigures removedFigures { get; set; }
-		public GameCondition()
+		public GameCondition(TimeSpan time, int mode)
 		{
 			InitializeComponent();
-			desk = new Desk { Height=DeskGrid.Height, WhiteBrush=Brushes.AntiqueWhite, BlackBrush=Brushes.BurlyWood};
-			DeskGrid.Children.Add(desk);
-			timer = new Timer { Height = TimerGrid.Height-70, Width = TimerGrid.Width, Margin= new Thickness {Top=35,Bottom=35 } };
-			TimerGrid.Children.Add(timer);
-			timer.DataContext = timer;
+			desk = new Desk(mode) { Height=DeskGrid.Height};
+			timer = new Timer(time) { Height = TimerGrid.Height-70, Width = TimerGrid.Width, Margin= new Thickness {Top=35,Bottom=35 } };
 			removedFigures = new RemovedFigures { Height = RemovedGrid.Height, Width = RemovedGrid.Width };
+			timer.DataContext = timer;
+			DeskGrid.Children.Add(desk);
+			TimerGrid.Children.Add(timer);
 			RemovedGrid.Children.Add(removedFigures);
 			timer.Restart();
 			Algorithms.SetData(desk);
@@ -226,7 +226,7 @@ namespace Chess.Controls
 			}
 		}
 		#endregion
-		private void Button_Click(object sender, RoutedEventArgs e)
+		private void Restart(object sender, RoutedEventArgs e)
 		{
 			this.Restart();
 		}

@@ -3,12 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:fig="clr-namespace:Chess.Controls"
+        xmlns:views="clr-namespace:Chess.Views"
         mc:Ignorable="d"
         Title="MainWindow" Height="1080" Width="1920" WindowState="Maximized">
-    <Grid Name="MainGrid">
-        <fig:GameCondition x:Name="Game"
-            Height="{Binding ActualHeight, ElementName=MainGrid}"
-            Width="{Binding ActualWidth, ElementName=MainGrid}"/>
-    </Grid>
+    <Frame Name="Content" NavigationUIVisibility="Hidden">
+        <Frame.Content>
+            <views:Menu></views:Menu>
+        </Frame.Content>
+    </Frame>
 </Window>

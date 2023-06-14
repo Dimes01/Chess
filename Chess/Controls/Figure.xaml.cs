@@ -21,7 +21,7 @@ namespace Chess.Controls
 		public int CountMoves { get; set; }
 		public List<string> PossibleMoves { get; set; } = new List<string>();
 
-		public static readonly DependencyProperty ImageSourceProperty = DependencyProperty.Register(nameof(ImageSource), typeof(string), typeof(Figure));
+		private static readonly DependencyProperty ImageSourceProperty = DependencyProperty.Register(nameof(ImageSource), typeof(string), typeof(Figure));
 		public string ImageSource
 		{
 			get { return (string)GetValue(ImageSourceProperty); }
@@ -29,7 +29,7 @@ namespace Chess.Controls
 		}
 
 
-		public static readonly DependencyProperty TypeProperty = DependencyProperty.Register(nameof(Type), typeof(TypesFigures), typeof(Figure));
+		private static readonly DependencyProperty TypeProperty = DependencyProperty.Register(nameof(Type), typeof(TypesFigures), typeof(Figure));
 		public TypesFigures Type
 		{
 			get { return (TypesFigures)GetValue(TypeProperty); }
@@ -37,7 +37,7 @@ namespace Chess.Controls
 		}
 
 
-		public static readonly DependencyProperty SideProperty = DependencyProperty.Register(nameof(Side), typeof(SideColor), typeof(Figure));
+		private static readonly DependencyProperty SideProperty = DependencyProperty.Register(nameof(Side), typeof(SideColor), typeof(Figure));
 		public SideColor Side
 		{
 			get { return (SideColor)GetValue(SideProperty); }
@@ -45,7 +45,7 @@ namespace Chess.Controls
 		}
 
 
-		public static readonly DependencyProperty PositionProperty = DependencyProperty.Register(nameof(Position), typeof(string), typeof(Figure));
+		private static readonly DependencyProperty PositionProperty = DependencyProperty.Register(nameof(Position), typeof(string), typeof(Figure));
 		public string Position
 		{
 			get { return (string)GetValue(PositionProperty); }
@@ -55,7 +55,7 @@ namespace Chess.Controls
 
 		private SolidColorBrush SelectedBrush = Brushes.Green;
 
-		public static readonly DependencyProperty BrushBorderProperty = DependencyProperty.Register(nameof(BrushBorder), typeof(SolidColorBrush), typeof(Figure), new PropertyMetadata(Brushes.Transparent));
+		private static readonly DependencyProperty BrushBorderProperty = DependencyProperty.Register(nameof(BrushBorder), typeof(SolidColorBrush), typeof(Figure), new PropertyMetadata(Brushes.Transparent));
 		public SolidColorBrush BrushBorder
 		{
 			get { return (SolidColorBrush)GetValue(BrushBorderProperty); }
@@ -63,7 +63,7 @@ namespace Chess.Controls
 		}
 
 
-		public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(Figure),
+		private static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(Figure),
 			new FrameworkPropertyMetadata(new PropertyChangedCallback(OnIsSelectedChanged)));
 		public bool IsSelected
 		{
@@ -81,12 +81,12 @@ namespace Chess.Controls
 
 		private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (!(App.Current.MainWindow as MainWindow).Game.IsAtacked && CanSelected)
+			if (!App.GameCondition.IsAtacked && CanSelected)
 			{
 				IsSelected = true;
-				(App.Current.MainWindow as MainWindow).Game.ChangeSelectedFigure(this);
+				App.GameCondition.ChangeSelectedFigure(this);
 			}
-			(App.Current.MainWindow as MainWindow).Game.IsAtacked = false;
+			App.GameCondition.IsAtacked = false;
 		}
 	}
 }

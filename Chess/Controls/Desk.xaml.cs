@@ -13,12 +13,16 @@ namespace Chess.Controls
 	/// </summary>
 	public partial class Desk : UserControl, IRestart
 	{
-		public Desk()
+		public Desk(int _mode, Brush b1=null, Brush b2=null)
 		{
 			InitializeComponent();
+			mode = _mode;
+			if (b1 == null) BlackBrush = Brushes.BurlyWood; else BlackBrush = b1;
+			if (b2 == null) WhiteBrush = Brushes.AntiqueWhite; else WhiteBrush = b2;
 			MakeDesk();
 			Restart();
 		}
+		private int mode;
 		public Dictionary<SideColor, Figure> Kings { get; private set; }
 		public List<Figure> AllFigures { get; private set; } = new List<Figure>();
 		public List<string> DefensiveMoves { get; set; }
@@ -74,8 +78,18 @@ namespace Chess.Controls
 				AllFigures.Add(Cells[$"{i}7"].ChildFigure);
 			}
 
+			List<int> positions = new List<int>();
 			// Белые
-			List<int> positions = Algorithms.FisherRandom(new List<string> { "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1" });
+			switch (mode)
+			{
+				case 0:
+					positions = new List<int> { 0,1,2,3,4,5,6,7 };
+					break;
+				case 1:
+					positions = Algorithms.FisherRandom(new List<string> { "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1" });
+					break;
+			}
+			
 			Cells[$"{(char)(positions[0] + 'A')}1"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wR.png", Position = $"{(char)(positions[0] + 'A')}1", Type = TypesFigures.Rook, Side = SideColor.White };
 			Cells[$"{(char)(positions[1] + 'A')}1"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wN.png", Position = $"{(char)(positions[1] + 'A')}1", Type = TypesFigures.Knight, Side = SideColor.White };
 			Cells[$"{(char)(positions[2] + 'A')}1"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wB.png", Position = $"{(char)(positions[2] + 'A')}1", Type = TypesFigures.Bishop, Side = SideColor.White };
@@ -135,7 +149,7 @@ namespace Chess.Controls
 			AllFigures.Remove(_cell.ChildFigure);
 			_cell.RemoveFigure();
 		}
-		public static readonly DependencyProperty CellsProperty = DependencyProperty.Register(nameof(Cells), typeof(Dictionary<string, Cell>), typeof(Desk));
+		private static readonly DependencyProperty CellsProperty = DependencyProperty.Register(nameof(Cells), typeof(Dictionary<string, Cell>), typeof(Desk));
 
 		public Dictionary<string, Cell> Cells
 		{
@@ -143,7 +157,7 @@ namespace Chess.Controls
 			set { SetValue(CellsProperty, value); }
 		}
 
-		public static readonly DependencyProperty WhiteBrushProperty = DependencyProperty.Register(nameof(WhiteBrush), typeof(Brush), typeof(Desk),
+		private static readonly DependencyProperty WhiteBrushProperty = DependencyProperty.Register(nameof(WhiteBrush), typeof(Brush), typeof(Desk),
 			new FrameworkPropertyMetadata(new PropertyChangedCallback(OnWhiteBrushChanged)));
 		public Brush WhiteBrush
 		{
@@ -160,7 +174,7 @@ namespace Chess.Controls
 		}
 
 
-		public static readonly DependencyProperty BlackBrushProperty = DependencyProperty.Register(nameof(BlackBrush), typeof(Brush), typeof(Desk),
+		private static readonly DependencyProperty BlackBrushProperty = DependencyProperty.Register(nameof(BlackBrush), typeof(Brush), typeof(Desk),
 			new FrameworkPropertyMetadata(new PropertyChangedCallback(OnBlackBrushChanged)));
 		public Brush BlackBrush
 		{
@@ -177,7 +191,7 @@ namespace Chess.Controls
 		}
 
 
-		public static readonly DependencyProperty MarkedCellsProperty = DependencyProperty.Register(nameof(MarkedCells), typeof(List<string>), typeof(Desk),
+		private static readonly DependencyProperty MarkedCellsProperty = DependencyProperty.Register(nameof(MarkedCells), typeof(List<string>), typeof(Desk),
 			new FrameworkPropertyMetadata(new PropertyChangedCallback(OnMarkedCellsChanged)));
 		public List<string> MarkedCells
 		{
