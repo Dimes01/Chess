@@ -30,7 +30,7 @@ namespace Chess.Views
 
 		private void ToMenu(object sender, RoutedEventArgs e)
 		{
-			(App.Current.MainWindow as MainWindow).Content.Navigate(App.menu);
+			(App.Current.MainWindow as MainWindow).Content.Content=new Menu();
 		}
 	}
 }
