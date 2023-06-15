@@ -22,7 +22,6 @@ namespace Chess.Controls
 			desk = new Desk(mode) { Height = DeskGrid.Height };
 			timer = new Timer(time) { Height = TimerGrid.Height - 70, Width = TimerGrid.Width, Margin = new Thickness { Top = 35, Bottom = 35 } };
 			removedFigures = new RemovedFigures { Height = RemovedGrid.Height, Width = RemovedGrid.Width };
-			timer.DataContext = timer;
 			DeskGrid.Children.Add(desk);
 			TimerGrid.Children.Add(timer);
 			RemovedGrid.Children.Add(removedFigures);
