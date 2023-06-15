@@ -1,8 +1,7 @@
-﻿using System;
-using System.Windows;
-using Chess.Views;
+﻿using Chess.Controls;
+using System;
 using System.Collections.Generic;
-using Chess.Controls;
+using System.Windows;
 
 namespace Chess
 {
@@ -17,7 +16,7 @@ namespace Chess
 		public static GameCondition GameCondition { get; set; }
 		public static string PathStyleFigure { get; } = "glass";
 		public static string PathFolderFigure { get; } = "Images";
-		public static List<TimeSpan> timeSpans { get; } = new List<TimeSpan> { new TimeSpan(0,1,0),new TimeSpan(0,5,0), new TimeSpan(0,30,0), new TimeSpan(1,0,0)};
+		public static List<TimeSpan> timeSpans { get; } = new List<TimeSpan> { new TimeSpan(0, 1, 0), new TimeSpan(0, 5, 0), new TimeSpan(0, 30, 0), new TimeSpan(1, 0, 0) };
 	}
 
 	#region Перечисления

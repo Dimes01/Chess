@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Chess.Models;
 using Chess.Utilities;
-using System.Linq;
-using System.Text;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using Chess.Models;
 
 namespace Chess.Controls
 {
@@ -27,8 +19,8 @@ namespace Chess.Controls
 		public GameCondition(TimeSpan time, int mode)
 		{
 			InitializeComponent();
-			desk = new Desk(mode) { Height=DeskGrid.Height};
-			timer = new Timer(time) { Height = TimerGrid.Height-70, Width = TimerGrid.Width, Margin= new Thickness {Top=35,Bottom=35 } };
+			desk = new Desk(mode) { Height = DeskGrid.Height };
+			timer = new Timer(time) { Height = TimerGrid.Height - 70, Width = TimerGrid.Width, Margin = new Thickness { Top = 35, Bottom = 35 } };
 			removedFigures = new RemovedFigures { Height = RemovedGrid.Height, Width = RemovedGrid.Width };
 			timer.DataContext = timer;
 			DeskGrid.Children.Add(desk);
@@ -122,7 +114,7 @@ namespace Chess.Controls
 		}
 		private void RemoveFigure()
 		{
-			if (IsAtacked) 
+			if (IsAtacked)
 			{
 				Figure figure = desk.SelectedCell.ChildFigure;
 				desk.RemoveFigure(desk.SelectedCell);

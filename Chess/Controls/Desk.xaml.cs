@@ -13,7 +13,7 @@ namespace Chess.Controls
 	/// </summary>
 	public partial class Desk : UserControl, IRestart
 	{
-		public Desk(int _mode, Brush b1=null, Brush b2=null)
+		public Desk(int _mode, Brush b1 = null, Brush b2 = null)
 		{
 			InitializeComponent();
 			mode = _mode;
@@ -83,13 +83,13 @@ namespace Chess.Controls
 			switch (mode)
 			{
 				case 0:
-					positions = new List<int> { 0,1,2,3,4,5,6,7 };
+					positions = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 };
 					break;
 				case 1:
 					positions = Algorithms.FisherRandom(new List<string> { "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1" });
 					break;
 			}
-			
+
 			Cells[$"{(char)(positions[0] + 'A')}1"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wR.png", Position = $"{(char)(positions[0] + 'A')}1", Type = TypesFigures.Rook, Side = SideColor.White };
 			Cells[$"{(char)(positions[1] + 'A')}1"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wN.png", Position = $"{(char)(positions[1] + 'A')}1", Type = TypesFigures.Knight, Side = SideColor.White };
 			Cells[$"{(char)(positions[2] + 'A')}1"].ChildFigure = new Figure { ImageSource = $"pack://application:,,,/{App.PathFolderFigure}/{App.PathStyleFigure}/wB.png", Position = $"{(char)(positions[2] + 'A')}1", Type = TypesFigures.Bishop, Side = SideColor.White };
@@ -212,6 +212,6 @@ namespace Chess.Controls
 			SelectedCell.IsSelected = false;
 			SelectedFigure.IsSelected = false;
 		}
-		
+
 	}
 }
